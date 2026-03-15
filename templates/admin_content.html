@@ -13,15 +13,20 @@
                 <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
                     <input type="hidden" name="req_action" value="update_general">
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label fw-bold text-muted small text-uppercase">Website Name</label>
                             <input type="text" class="form-control" name="site_name" value="{{ general_data.site_name }}" required>
-                            <small class="text-muted">This updates the browser tab title and navbar text.</small>
+                            <small class="text-muted">Updates browser tab title and navbar text.</small>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label fw-bold text-muted small text-uppercase">Website Icon (Favicon / Logo)</label>
                             <input type="file" class="form-control" name="site_icon" accept="image/*">
-                            <small class="text-muted">Upload a square image. {% if general_data.site_icon %} <strong>Existing icon is active.</strong> {% endif %}</small>
+                            <small class="text-muted">Upload a square image.</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Website Description (SEO)</label>
+                            <textarea class="form-control" name="site_description" rows="1">{{ site_description }}</textarea>
+                            <small class="text-muted">Used for search engines and social sharing.</small>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-dark fw-bold rounded-pill"><i class="fa-solid fa-save me-2"></i>Save General Settings</button>

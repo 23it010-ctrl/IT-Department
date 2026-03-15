@@ -3,11 +3,11 @@ import json
 import sqlite3
 import shutil
 from datetime import datetime, timedelta
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g, send_from_directory
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
-from config import Config
-from init_db import init_db
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g, send_from_directory, send_file # type: ignore
+from werkzeug.security import generate_password_hash, check_password_hash # type: ignore
+from werkzeug.utils import secure_filename # type: ignore
+from config import Config # type: ignore
+from init_db import init_db # type: ignore
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -54,6 +54,14 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
+
 @app.before_request
 def before_request():
     g.user = None
@@ -70,6 +78,7 @@ def inject_globals():
     conn = get_db_connection()
     c_name = conn.execute("SELECT description FROM site_content WHERE page='site_name'").fetchone()
     c_icon = conn.execute("SELECT description FROM site_content WHERE page='site_icon'").fetchone()
+    c_desc = conn.execute("SELECT description FROM site_content WHERE page='site_description'").fetchone()
     
     c_ig = conn.execute("SELECT description FROM site_content WHERE page='social_instagram'").fetchone()
     c_fb = conn.execute("SELECT description FROM site_content WHERE page='social_facebook'").fetchone()
@@ -78,10 +87,13 @@ def inject_globals():
     
     site_name = c_name['description'] if c_name else "Department Portal"
     site_icon = c_icon['description'] if c_icon else ""
+    site_description = c_desc['description'] if c_desc else "Welcome to our department portal. Manage students, faculty, and academic content efficiently."
+    
     return dict(
         current_user=g.user, 
         site_name=site_name, 
         site_icon=site_icon,
+        site_description=site_description,
         social_instagram=c_ig['description'] if c_ig else "",
         social_facebook=c_fb['description'] if c_fb else "",
         social_twitter=c_tw['description'] if c_tw else ""
@@ -594,6 +606,18 @@ def admin_dashboard():
                            admin=admin_data,
                            current_user=g.user)
 
+@app.route('/admin/download-db')
+def download_db():
+    if not g.user or g.user['role'] != 'admin':
+        return redirect(url_for('login'))
+    
+    db_path = app.config['SQLITE_DB']
+    if os.path.exists(db_path):
+        return send_file(db_path, as_attachment=True, download_name=f"backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db")
+    else:
+        flash("Database file not found.", "danger")
+        return redirect(url_for('admin_dashboard'))
+
 @app.route('/admin/achievements', methods=['GET', 'POST'])
 def admin_achievements():
     if not g.user or g.user['role'] != 'admin':
@@ -784,8 +808,11 @@ def admin_content():
                     conn.execute("INSERT INTO site_content (page, title, description) VALUES (?, '', ?)", (page, val))
             
             site_name = request.form.get('site_name')
+            site_desc = request.form.get('site_description')
             if site_name:
                 upsert('site_name', site_name)
+            if site_desc:
+                upsert('site_description', site_desc)
                 
             if 'site_icon' in request.files:
                 file = request.files['site_icon']

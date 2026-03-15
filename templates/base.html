@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ site_description }}">
+    <meta name="author" content="{{ site_name }}">
+    <meta name="keywords" content="department, portal, management, students, faculty, achievements, news, events">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ site_name }}">
+    <meta property="og:description" content="{{ site_description }}">
     <title>{{ site_name }}</title>
     {% if site_icon %}
     <link rel="icon" href="{{ url_for('uploaded_file', filename=site_icon) }}">
