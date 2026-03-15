@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-bottom pb-3 mt-4 gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0"><i class="fa-solid fa-edit me-2 text-info"></i>Manage Content</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="fa-solid fa-arrow-left me-2"></i>Dashboard</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-dark text-white fw-bold rounded-top-4 py-3"><i class="fa-solid fa-cogs me-2"></i>General Website Settings</div>
+            <div class="card-body p-4">
+                <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_general">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Website Name</label>
+                            <input type="text" class="form-control" name="site_name" value="{{ general_data.site_name }}" required>
+                            <small class="text-muted">This updates the browser tab title and navbar text.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Website Icon (Favicon / Logo)</label>
+                            <input type="file" class="form-control" name="site_icon" accept="image/*">
+                            <small class="text-muted">Upload a square image. {% if general_data.site_icon %} <strong>Existing icon is active.</strong> {% endif %}</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark fw-bold rounded-pill"><i class="fa-solid fa-save me-2"></i>Save General Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-info text-white fw-bold rounded-top-4 py-3"><i class="fa-solid fa-home me-2"></i>Homepage Configuration</div>
+            <div class="card-body p-4">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_home">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Hero Title</label>
+                        <input type="text" class="form-control" name="home_title" value="{{ home_data.title }}" placeholder="Welcome to the Department" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Hero Description</label>
+                        <textarea class="form-control" name="home_desc" rows="2" placeholder="Excellence in technological education..." required>{{ home_data.description }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info text-dark fw-bold rounded-pill"><i class="fa-solid fa-sync-alt me-2"></i>Update Homepage</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-warning text-dark fw-bold rounded-top-4 py-3"><i class="fa-solid fa-flask me-2"></i>Labs Page Configuration</div>
+            <div class="card-body p-4">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_labs">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Labs Page Title</label>
+                        <input type="text" class="form-control" name="labs_title" value="{{ labs_data.title }}" required>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3 border-bottom pb-2"><i class="fa-solid fa-vials me-2"></i>Lab Facilities</h6>
+                    <div id="labs-container">
+                        {% for lab in labs_data.details %}
+                        <div class="row mb-3 lab-entry align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Lab Name</label>
+                                <input type="text" class="form-control" name="lab_name[]" value="{{ lab.name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Installed Software (comma separated)</label>
+                                <input type="text" class="form-control" name="lab_software[]" value="{{ lab.software }}" required>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <button type="button" class="btn btn-outline-danger" onclick="this.closest('.lab-entry').remove()"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <button type="button" class="btn btn-sm btn-outline-warning text-dark fw-bold mb-4" onclick="addLabEntry()"><i class="fa-solid fa-plus me-1"></i>Add Another Lab</button>
+                    
+                    <div class="d-block border-top mt-2 pt-4">
+                        <button type="submit" class="btn btn-warning text-dark fw-bold rounded-pill"><i class="fa-solid fa-save me-2"></i>Save Labs Page Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addLabEntry() {
+    const container = document.getElementById('labs-container');
+    const newEntry = document.createElement('div');
+    newEntry.className = 'row mb-3 lab-entry align-items-end';
+    newEntry.innerHTML = `
+        <div class="col-md-5">
+            <label class="form-label fw-bold text-muted small text-uppercase">Lab Name</label>
+            <input type="text" class="form-control" name="lab_name[]" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label fw-bold text-muted small text-uppercase">Installed Software (comma separated)</label>
+            <input type="text" class="form-control" name="lab_software[]" required>
+        </div>
+        <div class="col-md-1 text-end">
+            <button type="button" class="btn btn-outline-danger" onclick="this.closest('.lab-entry').remove()"><i class="fa-solid fa-trash"></i></button>
+        </div>
+    `;
+    container.appendChild(newEntry);
+}
+</script>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-primary text-white fw-bold rounded-top-4 py-3"><i class="fa-solid fa-address-book me-2"></i>Contact Page Info</div>
+            <div class="card-body p-4">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_contact">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{ contact_data.email }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" value="{{ contact_data.phone }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Physical Address</label>
+                        <textarea class="form-control" name="address" rows="3" required>{{ contact_data.address }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary fw-bold rounded-pill"><i class="fa-solid fa-save me-2"></i>Save Contact Info</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-success text-white fw-bold rounded-top-4 py-3"><i class="fa-solid fa-share-nodes me-2"></i>Social Media Links (Home & Contact Pages)</div>
+            <div class="card-body p-4">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_social">
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase"><i class="fa-brands fa-instagram text-danger me-2"></i>Instagram Link</label>
+                            <input type="url" class="form-control" name="instagram" value="{{ contact_data.instagram }}" placeholder="https://instagram.com/...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase"><i class="fa-brands fa-facebook text-primary me-2"></i>Facebook Link</label>
+                            <input type="url" class="form-control" name="facebook" value="{{ contact_data.facebook }}" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase"><i class="fa-brands fa-twitter text-info me-2"></i>Twitter Link</label>
+                            <input type="url" class="form-control" name="twitter" value="{{ contact_data.twitter }}" placeholder="https://twitter.com/...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase"><i class="fa-brands fa-youtube text-danger me-2"></i>YouTube Link</label>
+                            <input type="url" class="form-control" name="youtube" value="{{ contact_data.youtube }}" placeholder="https://youtube.com/...">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success fw-bold rounded-pill"><i class="fa-solid fa-save me-2"></i>Save Social Media Links</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-danger text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                <span><i class="fa-solid fa-newspaper me-2"></i>Manage News</span>
+                <button class="btn btn-sm btn-light text-danger fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#addNewsModal"><i class="fa-solid fa-plus me-1"></i>Add News</button>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded-bottom-4">
+                    {% for item in news %}
+                    <li class="list-group-item p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="fw-bold d-block">{{ item.title }}</span>
+                                <small class="text-muted"><i class="fa-solid fa-clock me-1"></i>{{ item.date.strftime('%Y-%m-%d') }} | by {{ item.uploaded_by }}</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editNewsModal{{ item._id }}"><i class="fa-solid fa-pen"></i></button>
+                                <form method="POST" action="" class="m-0" onsubmit="return confirm('Delete this news?');" autocomplete="off">
+                                    <input type="hidden" name="req_action" value="delete_news">
+                                    <input type="hidden" name="news_id" value="{{ item._id }}">
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm rounded-circle p-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Edit News Modal -->
+                    <div class="modal fade" id="editNewsModal{{ item._id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-0 shadow rounded-4">
+                                <div class="modal-header bg-danger text-white border-bottom-0 pb-3 rounded-top-4">
+                                    <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-edit me-2"></i>Edit News</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4 pt-3 text-start">
+                                    <form method="POST" action="" autocomplete="off">
+                                        <input type="hidden" name="req_action" value="edit_news">
+                                        <input type="hidden" name="news_id" value="{{ item._id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{ item.title }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold text-muted small text-uppercase">Content</label>
+                                            <textarea class="form-control" name="content" rows="4" required>{{ item.content }}</textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <li class="list-group-item text-center text-muted p-4"><i class="fa-solid fa-folder-open fa-2x mb-2 d-block"></i>No news left.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-header bg-success text-white fw-bold py-3 d-flex justify-content-between align-items-center">
+                <span><i class="fa-solid fa-calendar-alt me-2"></i>Manage Events</span>
+                <button class="btn btn-sm btn-light text-success fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#addEventModal"><i class="fa-solid fa-plus me-1"></i>Add Event</button>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded-bottom-4">
+                    {% for event in events %}
+                    <li class="list-group-item p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="fw-bold d-block">{{ event.title }}</span>
+                                <small class="text-muted"><i class="fa-solid fa-calendar-day me-1"></i>{{ event.date }} | by {{ event.uploaded_by }}</small>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event._id }}"><i class="fa-solid fa-pen"></i></button>
+                                <form method="POST" action="" class="m-0" onsubmit="return confirm('Delete this event?');" autocomplete="off">
+                                    <input type="hidden" name="req_action" value="delete_event">
+                                    <input type="hidden" name="event_id" value="{{ event._id }}">
+                                    <button class="btn btn-sm btn-outline-danger shadow-sm rounded-circle p-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Edit Event Modal -->
+                    <div class="modal fade" id="editEventModal{{ event._id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content border-0 shadow rounded-4">
+                                <div class="modal-header bg-success text-white border-bottom-0 pb-3 rounded-top-4">
+                                    <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-edit me-2"></i>Edit Event</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-4 pt-3 text-start">
+                                    <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                                        <input type="hidden" name="req_action" value="edit_event">
+                                        <input type="hidden" name="event_id" value="{{ event._id }}">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                                            <input type="text" class="form-control" name="title" value="{{ event.title }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                                            <textarea class="form-control" name="description" rows="3" required>{{ event.description }}</textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-bold text-muted small text-uppercase">Date</label>
+                                                <input type="date" class="form-control" name="date" value="{{ event.date }}" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label fw-bold text-muted small text-uppercase">Update Image</label>
+                                                <input type="file" class="form-control" name="image" accept="image/*">
+                                                <small class="text-muted">Leave blank to keep current image</small>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <li class="list-group-item text-center text-muted p-4"><i class="fa-solid fa-folder-open fa-2x mb-2 d-block"></i>No events registered.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add News Modal -->
+<div class="modal fade" id="addNewsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-danger text-white border-bottom-0 pb-3 rounded-top-4">
+                <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-plus-circle me-2"></i>Post News</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 pt-3 text-start">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="add_news">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Content</label>
+                        <textarea class="form-control" name="content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-paper-plane me-2"></i>Publish News</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-success text-white border-bottom-0 pb-3 rounded-top-4">
+                <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-calendar-plus me-2"></i>Add Department Event</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 pt-3 text-start">
+                <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="req_action" value="add_event">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                        <textarea class="form-control" name="description" rows="3" required></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Date</label>
+                            <input type="date" class="form-control" name="date" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Cover Image</label>
+                            <input type="file" class="form-control" name="image" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-check me-2"></i>Create Event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-header bg-dark text-white rounded-5 shadow-sm p-4 d-flex flex-column flex-md-row align-items-center justify-content-between border-start border-warning border-5 gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0 text-white"><i class="fa-solid fa-user-shield text-warning me-3"></i>Admin Dashboard</h2>
+    <span class="badge bg-warning text-dark rounded-pill px-4 py-2 text-uppercase fw-bold"><i class="fa-solid fa-crown me-2"></i>Administrator</span>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 rounded-4 text-center p-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="fa-regular fa-id-card me-2"></i>Profile Image</h5>
+            {% if admin and admin.profile_photo %}
+            <img src="{{ url_for('static', filename='uploads/' + admin.profile_photo) }}" class="rounded-circle img-thumbnail mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid var(--warning);">
+            {% else %}
+            <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 150px; height: 150px; font-size: 4rem;">
+                A
+            </div>
+            {% endif %}
+            
+            <hr class="my-4">
+            <h6 class="fw-bold text-muted mb-3"><i class="fa-solid fa-shield me-2"></i>Access Level</h6>
+            <div class="alert alert-warning text-dark rounded-pill fw-bold py-2"><i class="fa-solid fa-check-double me-2"></i>Full Admin Access</div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-user-edit text-warning me-2"></i>Profile Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('admin_dashboard') }}" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_profile">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ admin.name if admin else 'Administrator' }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{ admin.email if admin else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" value="{{ admin.phone if admin else '' }}">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Upload/Change Profile Photo</label>
+                        <input type="file" class="form-control bg-light" name="profile_photo" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-warning text-dark rounded-pill px-4 fw-bold"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-cogs text-dark me-2"></i>Management Actions</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                            <i class="fa-solid fa-user-check fa-2x text-success mb-2"></i>
+                            <h6 class="fw-bold">Manage Students</h6>
+                            {% if pending_students > 0 %}
+                                <span class="badge bg-danger rounded-pill mb-2 border border-light">{{ pending_students }} Pending</span>
+                            {% endif %}
+                            <a href="{{ url_for('admin_students') }}" class="btn btn-outline-success btn-sm rounded-pill mt-auto fw-bold"><i class="fa-solid fa-list-check me-1"></i>Open</a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                            <i class="fa-solid fa-chalkboard-teacher fa-2x text-primary mb-2"></i>
+                            <h6 class="fw-bold">Manage Faculty</h6>
+                            <a href="{{ url_for('admin_faculty') }}" class="btn btn-outline-primary btn-sm rounded-pill mt-auto fw-bold"><i class="fa-solid fa-users-cog me-1"></i>Open</a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                            <i class="fa-solid fa-globe fa-2x text-info mb-2"></i>
+                            <h6 class="fw-bold">Website Content</h6>
+                            <a href="{{ url_for('admin_content') }}" class="btn btn-outline-info btn-sm rounded-pill mt-auto fw-bold text-dark"><i class="fa-solid fa-edit me-1"></i>Open</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                            <i class="fa-solid fa-trophy fa-2x text-warning mb-2"></i>
+                            <h6 class="fw-bold">Student Achievements</h6>
+                            {% if pending_achievements > 0 %}
+                                <span class="badge bg-danger rounded-pill mb-2 border border-light">{{ pending_achievements }} Pending</span>
+                            {% endif %}
+                            <a href="{{ url_for('admin_achievements') }}" class="btn btn-outline-warning btn-sm rounded-pill mt-auto fw-bold text-dark"><i class="fa-solid fa-check-double me-1"></i>Open</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

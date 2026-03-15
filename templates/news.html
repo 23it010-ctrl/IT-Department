@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-5 border-bottom pb-3">
+    <h2 class="fw-bold text-danger mb-0"><i class="fa-solid fa-newspaper me-3"></i>Department News</h2>
+</div>
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        {% for item in news %}
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-regular fa-clock me-2"></i>{{ item.date.strftime('%Y-%m-%d') }}</span>
+                    <small class="text-muted fw-bold"><i class="fa-solid fa-pencil-alt me-1"></i>{{ item.uploaded_by }}</small>
+                </div>
+                <h4 class="card-title fw-bold mb-3 text-dark">{{ item.title }}</h4>
+                <p class="card-text text-secondary lh-lg">{{ item.content }}</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info text-center py-5 rounded-4"><i class="fa-solid fa-info-circle fa-3x mb-3 text-info d-block"></i>No news available at the moment.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

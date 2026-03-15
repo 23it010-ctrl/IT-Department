@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dashboard-header bg-white rounded-5 shadow-sm p-4 d-flex flex-column flex-md-row align-items-center justify-content-between mb-5 border-start border-primary border-5 gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-user-graduate text-primary me-3"></i>Welcome, {{ student.name }}!</h2>
+    <span class="badge {{ 'bg-success' if student.is_approved else 'bg-warning text-dark' }} fs-6 rounded-pill px-4 py-2 shadow-sm">
+        <i class="fa-solid {{ 'fa-check-circle' if student.is_approved else 'fa-clock' }} me-2"></i>
+        {{ 'Approved' if student.is_approved else 'Pending Approval' }}
+    </span>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 rounded-4 text-center p-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="fa-regular fa-id-card me-2"></i>Profile Image</h5>
+            {% if student.profile_photo %}
+            <img src="{{ url_for('static', filename='uploads/' + student.profile_photo) }}" class="rounded-circle img-thumbnail mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+            <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 150px; height: 150px; font-size: 4rem;">
+                {{ student.name[0] }}
+            </div>
+            {% endif %}
+            
+            <hr class="my-4">
+            <h6 class="fw-bold text-muted mb-3"><i class="fa-solid fa-lock me-2"></i>Profile Status</h6>
+            {% if student.is_approved %}
+            <div class="alert alert-success rounded-pill fw-bold py-2"><i class="fa-solid fa-check-circle me-2"></i>Profile is Approved & Configured</div>
+            {% else %}
+            <div class="alert alert-warning rounded-pill fw-bold py-2 text-dark"><i class="fa-solid fa-clock me-2"></i>Profile pending review</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-header bg-white border-bottom py-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-user-edit text-primary me-2"></i>Profile Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('student_dashboard') }}" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="req_action" value="update_profile">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Name</label>
+                            <input type="text" class="form-control" name="name" value="{{ student.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Roll Number</label>
+                            <input type="text" class="form-control" name="roll_number" value="{{ student.roll_number }}" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{ student.email or '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" value="{{ student.phone or '' }}">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Upload/Change Profile Photo</label>
+                        <input type="file" class="form-control bg-light" name="profile_photo" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-trophy text-warning me-2"></i>Achievements & Events</h5>
+                <button type="button" class="btn btn-sm btn-success rounded-pill fw-bold px-3" data-bs-toggle="modal" data-bs-target="#addAchievementModal">
+                    <i class="fa-solid fa-plus me-1"></i>Add New
+                </button>
+            </div>
+            <div class="card-body p-4 p-0">
+                <ul class="list-group list-group-flush rounded-bottom-4">
+                    {% for ach in achievements %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-4">
+                        <div>
+                            <div class="d-flex gap-2 mb-2">
+                                <span class="badge {% if ach.type == 'event' %}bg-info{% else %}bg-warning text-dark{% endif %} rounded-pill px-3 py-1">
+                                    <i class="fa-solid {% if ach.type == 'event' %}fa-calendar-alt{% else %}fa-medal{% endif %} me-1"></i>{{ ach.type | capitalize }}
+                                </span>
+                                {% if ach.is_approved %}
+                                <span class="badge bg-success rounded-pill px-3 py-1"><i class="fa-solid fa-check-circle me-1"></i>Approved (Public)</span>
+                                {% else %}
+                                <span class="badge bg-secondary rounded-pill px-3 py-1"><i class="fa-solid fa-clock me-1"></i>Pending Review</span>
+                                {% endif %}
+                            </div>
+                            <h6 class="fw-bold mb-1">{{ ach.title }}</h6>
+                            <p class="mb-0 text-muted small">{{ ach.description }}</p>
+                        </div>
+                        {% if ach.proof_url %}
+                        <a href="{{ url_for('static', filename='uploads/' + ach.proof_url) }}" target="_blank" class="btn btn-outline-secondary btn-sm rounded-circle p-2" title="View Proof">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </a>
+                        {% endif %}
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-center text-muted p-5">
+                        <i class="fa-solid fa-tasks fa-3x mb-3 text-light d-block"></i>No events or achievements added yet.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Achievement Modal -->
+<div class="modal fade" id="addAchievementModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-light border-bottom-0 pb-0">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-plus-circle text-primary me-2"></i>Add Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 pt-3">
+                <form method="POST" action="{{ url_for('student_dashboard') }}" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" name="req_action" value="add_achievement">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Type</label>
+                        <select class="form-select bg-light border-0" name="type" required>
+                            <option value="event">Event Participation</option>
+                            <option value="achievement">Achievement/Award</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                        <input type="text" class="form-control" name="title" required placeholder="e.g., Hackathon 2026 Winner">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                        <textarea class="form-control" name="description" rows="3" required placeholder="Details about your participation or award..."></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Proof/Certificate (Image or PDF)</label>
+                        <input type="file" class="form-control" name="proof" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success rounded-pill fw-bold py-2"><i class="fa-solid fa-paper-plane me-2"></i>Save Record</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-0 mt-4 rounded-4">
+            <div class="card-header bg-success text-white text-center py-3 rounded-top-4">
+                <h4 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i>Student Registration</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" autocomplete="off">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Full Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Roll Number</label>
+                            <input type="text" class="form-control" name="roll_number" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Current Year</label>
+                        <select class="form-select" name="year" required>
+                            <option value="1st">1st Year</option>
+                            <option value="2nd">2nd Year</option>
+                            <option value="3rd">3rd Year</option>
+                            <option value="4th">4th Year</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Username</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                    </div>
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-success fw-bold py-2 rounded-pill">Submit Application</button>
+                    </div>
+                    <div class="text-center mt-3 text-muted">
+                        <small>Registration forms are subject to Admin approval before access is granted.</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

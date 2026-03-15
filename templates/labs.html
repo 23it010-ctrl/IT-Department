@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center bg-primary text-white rounded-4 p-5 mb-5 shadow-sm" style="background: linear-gradient(to right, #2c3e50, #4ca1af);">
+    <div class="col-md-8">
+        <h1 class="display-5 fw-bold mb-3"><i class="fa-solid fa-flask me-3"></i>{{ content.title }}</h1>
+        <p class="lead mb-0">Discover our advanced infrastructure designed for practical learning.</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for lab in content.details %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 shadow border-0 p-4 rounded-4">
+            <h4 class="card-title fw-bold text-primary border-bottom pb-3 mb-4"><i class="fa-solid fa-plug me-2"></i>{{ lab.name }}</h4>
+            <div>
+                <h6 class="text-secondary fw-bold text-uppercase">Installed Software & Tools</h6>
+                <ul class="list-group list-group-flush mt-3 border-0">
+                    {% for item in lab.software.split(',') %}
+                    <li class="list-group-item bg-transparent border-0 px-0 d-flex align-items-center">
+                        <i class="fa-solid fa-check-circle text-success me-3"></i>{{ item.strip() }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

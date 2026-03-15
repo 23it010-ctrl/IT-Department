@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-bottom pb-3 gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0"><i class="fa-solid fa-chalkboard-teacher me-2 text-primary"></i>Manage Faculty</h2>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+        <button class="btn btn-primary rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#addFacultyModal"><i class="fa-solid fa-plus me-2"></i>Add Faculty</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="fa-solid fa-arrow-left me-2"></i>Dashboard</a>
+    </div>
+</div>
+
+<div class="bg-white rounded-4 shadow-sm p-4 border-0">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th class="py-3 text-muted small text-uppercase">Name</th>
+                    <th class="py-3 text-muted small text-uppercase">Department</th>
+                    <th class="py-3 text-muted small text-uppercase">Email</th>
+                    <th class="py-3 text-muted small text-uppercase text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in faculty %}
+                <tr>
+                    <td class="fw-bold text-nowrap">{{ f.name }}</td>
+                    <td><span class="badge bg-primary rounded-pill">{{ f.department }}</span></td>
+                    <td class="text-nowrap"><i class="fa-regular fa-envelope text-muted me-1"></i>{{ f.email }}</td>
+                    <td>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-sm btn-info text-white rounded-pill fw-bold shadow-sm" type="button" title="Edit Faculty" data-bs-toggle="modal" data-bs-target="#editFacultyModal{{ f.id }}"><i class="fa-solid fa-edit me-1"></i>Edit</button>
+                            <form method="POST" action="" class="m-0" onsubmit="return confirm('Remove faculty {{ f.name }}?');" autocomplete="off">
+                                <input type="hidden" name="req_action" value="delete">
+                                <input type="hidden" name="faculty_id" value="{{ f.id }}">
+                                <button class="btn btn-sm btn-danger rounded-pill fw-bold shadow-sm" type="submit"><i class="fa-solid fa-trash me-1"></i>Remove</button>
+                            </form>
+                        </div>
+
+                        <!-- Edit Faculty Modal -->
+                        <div class="modal fade" id="editFacultyModal{{ f.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content border-0 shadow rounded-4 text-start">
+                                    <div class="modal-header bg-info text-white border-bottom-0 pb-3 rounded-top-4">
+                                        <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-user-edit me-2"></i>Edit Faculty</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4 pt-3">
+                                        <form method="POST" action="" autocomplete="off">
+                                            <input type="hidden" name="req_action" value="edit">
+                                            <input type="hidden" name="faculty_id" value="{{ f.id }}">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+                                                <input type="text" class="form-control" name="name" value="{{ f.name }}" required>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6 mb-3 mb-md-0">
+                                                    <label class="form-label fw-bold text-muted small text-uppercase">Department</label>
+                                                    <input type="text" class="form-control" name="department" value="{{ f.department }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-bold text-muted small text-uppercase">Phone</label>
+                                                    <input type="text" class="form-control" name="phone" value="{{ f.phone or '' }}">
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold text-muted small text-uppercase">Email</label>
+                                                <input type="email" class="form-control" name="email" value="{{ f.email or '' }}" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-info w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-5 text-muted"><i class="fa-solid fa-info-circle fa-2x mb-2 d-block"></i>No faculty records.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Faculty Modal -->
+<div class="modal fade" id="addFacultyModal">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header bg-primary text-white border-bottom-0 pb-3 rounded-top-4">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-user-plus me-2"></i>Register Faculty</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 pt-3">
+                <form method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="req_action" value="add">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Department</label>
+                            <input type="text" class="form-control" name="department" value="Computer Science" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Phone</label>
+                            <input type="text" class="form-control" name="phone">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <hr>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Login Username</label>
+                            <input type="text" class="form-control" name="username" autocomplete="off" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Login Password</label>
+                            <input type="password" class="form-control" name="password" autocomplete="new-password" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2"><i class="fa-solid fa-save me-2"></i>Create Faculty Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

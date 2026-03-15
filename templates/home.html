@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-0">
+    <div class="col-md-12 hero-section text-white p-5 text-center" style="border-radius: 20px; background: linear-gradient(135deg, #2c3e50, #3498db);">
+        <div class="mb-4">
+            <span class="badge bg-white text-dark bg-opacity-75 py-2 px-4 rounded-pill shadow-sm" style="font-size: 0.95rem;">
+                <i class="fa-regular fa-clock me-2 text-primary"></i> <span id="liveDateTime" class="fw-bold"></span>
+            </span>
+        </div>
+        <h1 class="display-4 fw-bold mb-4">{{ content.title }}</h1>
+        <p class="lead mb-4">{{ content.description }}</p>
+        <div class="mb-4">
+            <a href="{{ url_for('students') }}" class="btn btn-primary btn-lg px-4 me-md-3 mb-3 mb-md-0 rounded-pill">Meet Our Students</a>
+            <a href="{{ url_for('faculty_list') }}" class="btn btn-outline-light btn-lg px-4 rounded-pill">Our Faculty</a>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-4 mt-5">
+            {% if social_instagram %}
+            <a href="{{ social_instagram }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Instagram">
+                <i class="fa-brands fa-instagram fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#E1306C'; this.style.filter='drop-shadow(0 0 8px rgba(225,48,108,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
+            </a>
+            {% endif %}
+            {% if social_twitter %}
+            <a href="{{ social_twitter }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Twitter">
+                <i class="fa-brands fa-twitter fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#1DA1F2'; this.style.filter='drop-shadow(0 0 8px rgba(29,161,242,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
+            </a>
+            {% endif %}
+            {% if social_facebook %}
+            <a href="{{ social_facebook }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Facebook">
+                <i class="fa-brands fa-facebook fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#1877F2'; this.style.filter='drop-shadow(0 0 8px rgba(24,119,242,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5 text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4 shadow-sm border-0">
+            <div class="card-body">
+                <i class="fa-solid fa-laptop-code fa-3x mb-3 text-primary"></i>
+                <h3 class="card-title h5 fw-bold">Modern Labs</h3>
+                <p class="card-text text-muted">Experience hands-on learning in our state-of-the-art laboratories equipped with the latest software and hardware.</p>
+                <a href="{{ url_for('labs') }}" class="btn btn-outline-primary rounded-pill btn-sm mt-2">View Labs</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4 shadow-sm border-0">
+            <div class="card-body">
+                <i class="fa-solid fa-calendar-alt fa-3x mb-3 text-success"></i>
+                <h3 class="card-title h5 fw-bold">Exciting Events</h3>
+                <p class="card-text text-muted">Join various departmental events, hackathons, and workshops to enhance your skills and network.</p>
+                <a href="{{ url_for('events') }}" class="btn btn-outline-success rounded-pill btn-sm mt-2">View Events</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4 shadow-sm border-0">
+            <div class="card-body">
+                <i class="fa-solid fa-newspaper fa-3x mb-3 text-danger"></i>
+                <h3 class="card-title h5 fw-bold">Latest News</h3>
+                <p class="card-text text-muted">Stay updated with the latest happenings, achievements, and announcements from our vibrant department.</p>
+                <a href="{{ url_for('news') }}" class="btn btn-outline-danger rounded-pill btn-sm mt-2">Read News</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateLiveTime() {
+    const now = new Date();
+    const options = { 
+        weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    };
+    document.getElementById('liveDateTime').textContent = now.toLocaleDateString('en-US', options);
+}
+setInterval(updateLiveTime, 1000);
+updateLiveTime();
+</script>
+{% endblock %}
