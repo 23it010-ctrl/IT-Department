@@ -1,35 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center py-3">
-                <h4 class="mb-0"><i class="fa-solid fa-user-circle me-2"></i>Login</h4>
+<div class="row justify-content-center animate-fade">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-4">
+        <div class="card shadow-lg mt-5 overflow-hidden">
+            <div class="card-header bg-primary text-center py-4 border-0">
+                <div class="mb-3">
+                    <i class="fa-solid fa-graduation-cap fa-3x text-white"></i>
+                </div>
+                <h3 class="fw-bold mb-0">Welcome Back</h3>
+                <p class="text-white text-opacity-75 mb-0">Login to your account</p>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-4 p-md-5">
                 <form method="POST" autocomplete="off">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Username</label>
+                    <div class="mb-3 animate-slide" style="animation-delay: 0.1s;">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Username</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" class="form-control" name="username" required placeholder="Enter your username">
+                            <span class="input-group-text bg-dark border-0 text-primary"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" class="form-control" name="username" required placeholder="User ID">
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Password</label>
+                    <div class="mb-4 animate-slide" style="animation-delay: 0.2s;">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Password</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" class="form-control" name="password" required placeholder="Enter your password">
+                            <span class="input-group-text bg-dark border-0 text-primary"><i class="fa-solid fa-lock"></i></span>
+                            <input type="password" class="form-control" name="password" required placeholder="••••••••">
                         </div>
                     </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary fw-bold py-2">Login to Dashboard</button>
+                    <div class="d-grid gap-2 animate-slide" style="animation-delay: 0.3s;">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">Sign In</button>
                     </div>
                 </form>
-                <div class="text-center mt-4">
-                    <p class="mb-0">Are you a new student? <a href="{{ url_for('register') }}" class="fw-bold">Register Here</a></p>
+                
+                <div class="text-center mt-5 pt-3 border-top animate-slide" style="animation-delay: 0.4s;">
+                    <p class="text-muted mb-2">New student?</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Create an Account</a>
                 </div>
             </div>
+        </div>
+        <div class="text-center mt-4 animate-fade" style="animation-delay: 0.5s;">
+            <a href="{{ url_for('home') }}" class="text-muted text-decoration-none small"><i class="fa-solid fa-arrow-left me-1"></i> Back to Homepage</a>
         </div>
     </div>
 </div>

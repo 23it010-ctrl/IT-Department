@@ -60,10 +60,19 @@
                     </li>
                     {% if current_user %}
                         {% if current_user.role == 'admin' %}
+                            <li class="nav-item">
+                                <span class="nav-link text-warning fw-bold d-none d-lg-block pe-0"><i class="fa-solid fa-user-shield me-1"></i>Admin</span>
+                            </li>
                             <li class="nav-item"><a class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
                         {% elif current_user.role == 'faculty' %}
+                            <li class="nav-item">
+                                <span class="nav-link text-success fw-bold d-none d-lg-block pe-0"><i class="fa-solid fa-chalkboard-user me-1"></i>Faculty</span>
+                            </li>
                             <li class="nav-item"><a class="nav-link {% if request.endpoint == 'faculty_dashboard' %}active{% endif %}" href="{{ url_for('faculty_dashboard') }}">Dashboard</a></li>
                         {% elif current_user.role == 'student' %}
+                            <li class="nav-item">
+                                <span class="nav-link text-info fw-bold d-none d-lg-block pe-0"><i class="fa-solid fa-user-graduate me-1"></i>Student</span>
+                            </li>
                             <li class="nav-item"><a class="nav-link {% if request.endpoint == 'student_dashboard' %}active{% endif %}" href="{{ url_for('student_dashboard') }}">Dashboard</a></li>
                         {% endif %}
                         <li class="nav-item">

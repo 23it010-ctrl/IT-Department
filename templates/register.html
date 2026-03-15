@@ -1,25 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow border-0 mt-4 rounded-4">
-            <div class="card-header bg-success text-white text-center py-3 rounded-top-4">
-                <h4 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i>Student Registration</h4>
+<div class="row justify-content-center animate-fade">
+    <div class="col-12 col-md-10 col-lg-7">
+        <div class="card shadow-lg mt-4 overflow-hidden">
+            <div class="card-header bg-success text-center py-4 border-0">
+                <div class="mb-2">
+                    <i class="fa-solid fa-user-plus fa-3x text-white"></i>
+                </div>
+                <h3 class="fw-bold mb-0">Student Registration</h3>
+                <p class="text-white text-opacity-75 mb-0">Join our academic community</p>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-4 p-md-5">
                 <form method="POST" autocomplete="off">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Full Name</label>
-                            <input type="text" class="form-control" name="name" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3 animate-slide" style="animation-delay: 0.1s;">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
+                            <input type="text" class="form-control" name="name" required placeholder="John Doe">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Roll Number</label>
-                            <input type="text" class="form-control" name="roll_number" required>
+                        <div class="col-md-6 mb-3 animate-slide" style="animation-delay: 0.2s;">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Roll Number</label>
+                            <input type="text" class="form-control" name="roll_number" required placeholder="e.g. 23IT001">
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Current Year</label>
+                    
+                    <div class="mb-4 animate-slide" style="animation-delay: 0.3s;">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Current Year</label>
                         <select class="form-select" name="year" required>
                             <option value="1st">1st Year</option>
                             <option value="2nd">2nd Year</option>
@@ -27,25 +32,40 @@
                             <option value="4th">4th Year</option>
                         </select>
                     </div>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Username</label>
-                            <input type="text" class="form-control" name="username" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Password</label>
-                            <input type="password" class="form-control" name="password" required>
+
+                    <div class="border-top pt-4 mt-4">
+                        <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-lock me-2"></i>Account Credentials</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3 animate-slide" style="animation-delay: 0.4s;">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Username</label>
+                                <input type="text" class="form-control" name="username" required placeholder="Choose a username">
+                            </div>
+                            <div class="col-md-6 mb-3 animate-slide" style="animation-delay: 0.5s;">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Password</label>
+                                <input type="password" class="form-control" name="password" required placeholder="••••••••">
+                            </div>
                         </div>
                     </div>
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-success fw-bold py-2 rounded-pill">Submit Application</button>
+
+                    <div class="d-grid mt-5 animate-slide" style="animation-delay: 0.6s;">
+                        <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold py-3"><i class="fa-solid fa-paper-plane me-2"></i>Submit Application</button>
                     </div>
-                    <div class="text-center mt-3 text-muted">
-                        <small>Registration forms are subject to Admin approval before access is granted.</small>
+
+                    <div class="alert alert-info mt-4 rounded-4 border-0 animate-slide" style="animation-delay: 0.7s;">
+                        <div class="d-flex gap-3 align-items-center">
+                            <i class="fa-solid fa-circle-info fa-2x"></i>
+                            <div class="small">Applications are manually reviewed by the Admin team. You will be able to log in once your account is approved.</div>
+                        </div>
                     </div>
                 </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-0">Existing user? <a href="{{ url_for('login') }}" class="fw-bold text-primary text-decoration-none">Sign In Here</a></p>
+                </div>
             </div>
+        </div>
+        <div class="text-center mt-4 mb-5 animate-fade" style="animation-delay: 0.8s;">
+            <a href="{{ url_for('home') }}" class="text-muted text-decoration-none small"><i class="fa-solid fa-arrow-left me-1"></i> Back to Homepage</a>
         </div>
     </div>
 </div>
