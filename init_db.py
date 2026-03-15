@@ -4,6 +4,7 @@ from config import Config
 
 def init_db():
     print("Connecting to SQLite database...")
+    print("🛡️  Data Safety Mode: Checking tables and preserving existing data...")
     conn = sqlite3.connect(Config.SQLITE_DB)
     cursor = conn.cursor()
     
