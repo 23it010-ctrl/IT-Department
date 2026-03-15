@@ -170,18 +170,8 @@ def init_db():
     
     conn.commit()
     
-    # Data Permanence Verification
-    print("--- 📊 Data Permanence Summary ---")
-    users_count = cursor.execute("SELECT COUNT(*) FROM users").fetchone()[0]
-    students_count = cursor.execute("SELECT COUNT(*) FROM students").fetchone()[0]
-    faculty_count = cursor.execute("SELECT COUNT(*) FROM faculty").fetchone()[0]
-    print(f"✅ Users Stored: {users_count}")
-    print(f"✅ Students Registered: {students_count}")
-    print(f"✅ Faculty Members: {faculty_count}")
-    print("----------------------------------")
-    
+    conn.commit()
     conn.close()
-    print("SQLite database initialized successfully!")
 
 if __name__ == '__main__':
     init_db()
