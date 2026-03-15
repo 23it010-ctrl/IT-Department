@@ -6,9 +6,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from config import Config
+from init_db import init_db
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Auto-initialize database
+init_db()
 
 # Configure Uploads
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'docx'}
