@@ -613,34 +613,6 @@ def admin_students():
                 conn.execute("UPDATE students SET is_approved = 1 WHERE id = ?", (student_id,))
                 conn.commit()
                 flash('Student approved successfully.', 'success')
-            elif action == 'add':
-                username = request.form.get('username')
-                password = request.form.get('password')
-                name = request.form.get('name')
-                year = request.form.get('year')
-                roll = request.form.get('roll_number')
-                email = request.form.get('email', '')
-                phone = request.form.get('phone', '')
-                
-                if not username or not password or not roll or not name:
-                    flash('Required fields: Username, Password, Name, and Roll Number.', 'danger')
-                else:
-                    try:
-                        cursor = conn.cursor()
-                        cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, generate_password_hash(password), 'student'))
-                        user_id = cursor.lastrowid
-                        cursor.execute(
-                            "INSERT INTO students (user_id, name, roll_number, year, email, phone, is_approved, profile_locked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-                            (user_id, name, roll, year, email, phone, 1, 0)
-                        )
-                        conn.commit()
-                        flash('Student record created successfully!', 'success')
-                    except sqlite3.IntegrityError:
-                        conn.rollback()
-                        flash('Database Error: Username or Roll Number already exists.', 'danger')
-                    except Exception as sub_e:
-                        conn.rollback()
-                        flash(f'Error adding student: {str(sub_e)}', 'danger')
             elif action == 'delete':
                 stu_row = conn.execute("SELECT user_id FROM students WHERE id = ?", (student_id,)).fetchone()
                 if stu_row:

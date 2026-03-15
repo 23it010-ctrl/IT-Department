@@ -3,7 +3,6 @@
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-bottom pb-3 mt-4 gap-3 text-center text-md-start">
     <h2 class="fw-bold mb-0"><i class="fa-solid fa-users-cog me-2 text-danger"></i>Manage Students</h2>
     <div class="d-flex flex-wrap justify-content-center gap-2">
-        <button class="btn btn-success rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-user-plus me-2"></i>Add Student</button>
         <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary rounded-pill fw-bold"><i class="fa-solid fa-arrow-left me-2"></i>Dashboard</a>
     </div>
 </div>
@@ -114,61 +113,5 @@
     </div>
 </div>
 
-<!-- Add Student Modal -->
-<div class="modal fade" id="addStudentModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header bg-success text-white border-bottom-0 pb-3 rounded-top-4">
-                <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-user-plus me-2"></i>Add Regular Student</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4 pt-3 text-start">
-                <form method="POST" action="" autocomplete="off">
-                    <input type="hidden" name="req_action" value="add">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Username</label>
-                            <input type="text" class="form-control" name="username" autocomplete="off" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Password</label>
-                            <input type="password" class="form-control" name="password" autocomplete="new-password" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Full Name</label>
-                        <input type="text" class="form-control" name="name" required>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Roll Number</label>
-                            <input type="text" class="form-control" name="roll_number" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Year</label>
-                            <select class="form-select" name="year" required>
-                                <option value="1st">1st Year</option>
-                                <option value="2nd">2nd Year</option>
-                                <option value="3rd">3rd Year</option>
-                                <option value="4th">4th Year</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Email</label>
-                            <input type="email" class="form-control" name="email">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Phone</label>
-                            <input type="text" class="form-control" name="phone">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-plus-circle me-2"></i>Create Student</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 {% endblock %}
