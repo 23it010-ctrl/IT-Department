@@ -4,12 +4,13 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, timedelta
 from config import Config
 from init_db import init_db
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.permanent_session_lifetime = timedelta(days=7)
 
 # Auto-initialize database
 init_db()
@@ -208,6 +209,7 @@ def login():
                     
             session['user_id'] = user['id']
             session['role'] = user['role']
+            session.permanent = True
             flash('Login successful!', 'success')
             
             conn.close()

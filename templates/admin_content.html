@@ -179,13 +179,36 @@ function addLabEntry() {
 
 <div class="row">
     <div class="col-md-6 mb-4">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden">
             <div class="card-header bg-danger text-white fw-bold py-3 d-flex justify-content-between align-items-center">
                 <span><i class="fa-solid fa-newspaper me-2"></i>Manage News</span>
-                <button class="btn btn-sm btn-light text-danger fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#addNewsModal"><i class="fa-solid fa-plus me-1"></i>Add News</button>
+                <button class="btn btn-sm btn-light text-danger fw-bold rounded-pill px-3 shadow-sm" data-bs-toggle="collapse" data-bs-target="#addNewsCollapse"><i class="fa-solid fa-plus me-1"></i>Add News</button>
             </div>
+            
+            <!-- Inline Add News Form -->
+            <div class="collapse border-bottom bg-light" id="addNewsCollapse">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">Post New Department Update</h6>
+                    <form method="POST" action="" autocomplete="off">
+                        <input type="hidden" name="req_action" value="add_news">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Content</label>
+                            <textarea class="form-control" name="content" rows="4" required></textarea>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Publish News</button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-toggle="collapse" data-bs-target="#addNewsCollapse">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-bottom-4">
+                <ul class="list-group list-group-flush">
                     {% for item in news %}
                     <li class="list-group-item p-3">
                         <div class="d-flex justify-content-between align-items-start mb-2">
@@ -194,10 +217,10 @@ function addLabEntry() {
                                 <small class="text-muted"><i class="fa-solid fa-clock me-1"></i>{{ item.date.strftime('%Y-%m-%d') }} | by {{ item.uploaded_by }}</small>
                             </div>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editNewsModal{{ item._id }}"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editNewsModal{{ item.id }}"><i class="fa-solid fa-pen"></i></button>
                                 <form method="POST" action="" class="m-0" onsubmit="return confirm('Delete this news?');" autocomplete="off">
                                     <input type="hidden" name="req_action" value="delete_news">
-                                    <input type="hidden" name="news_id" value="{{ item._id }}">
+                                    <input type="hidden" name="news_id" value="{{ item.id }}">
                                     <button class="btn btn-sm btn-outline-danger shadow-sm rounded-circle p-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </div>
@@ -205,8 +228,8 @@ function addLabEntry() {
                     </li>
 
                     <!-- Edit News Modal -->
-                    <div class="modal fade" id="editNewsModal{{ item._id }}" tabindex="-1">
-                        <div class="modal-dialog">
+                    <div class="modal fade" id="editNewsModal{{ item.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow rounded-4">
                                 <div class="modal-header bg-danger text-white border-bottom-0 pb-3 rounded-top-4">
                                     <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-edit me-2"></i>Edit News</h5>
@@ -215,7 +238,7 @@ function addLabEntry() {
                                 <div class="modal-body p-4 pt-3 text-start">
                                     <form method="POST" action="" autocomplete="off">
                                         <input type="hidden" name="req_action" value="edit_news">
-                                        <input type="hidden" name="news_id" value="{{ item._id }}">
+                                        <input type="hidden" name="news_id" value="{{ item.id }}">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
                                             <input type="text" class="form-control" name="title" value="{{ item.title }}" required>
@@ -239,13 +262,46 @@ function addLabEntry() {
     </div>
     
     <div class="col-md-6 mb-4">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card shadow-sm border-0 rounded-4 h-100 overflow-hidden">
             <div class="card-header bg-success text-white fw-bold py-3 d-flex justify-content-between align-items-center">
                 <span><i class="fa-solid fa-calendar-alt me-2"></i>Manage Events</span>
-                <button class="btn btn-sm btn-light text-success fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#addEventModal"><i class="fa-solid fa-plus me-1"></i>Add Event</button>
+                <button class="btn btn-sm btn-light text-success fw-bold rounded-pill px-3 shadow-sm" data-bs-toggle="collapse" data-bs-target="#addEventCollapse"><i class="fa-solid fa-plus me-1"></i>Add Event</button>
             </div>
+
+            <!-- Inline Add Event Form -->
+            <div class="collapse border-bottom bg-light" id="addEventCollapse">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">Create New Department Event</h6>
+                    <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                        <input type="hidden" name="req_action" value="add_event">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Date</label>
+                                <input type="date" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-muted small text-uppercase">Cover Image</label>
+                                <input type="file" class="form-control" name="image" accept="image/*" required>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">Create Event</button>
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-toggle="collapse" data-bs-target="#addEventCollapse">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-bottom-4">
+                <ul class="list-group list-group-flush">
                     {% for event in events %}
                     <li class="list-group-item p-3">
                         <div class="d-flex justify-content-between align-items-start mb-2">
@@ -254,10 +310,10 @@ function addLabEntry() {
                                 <small class="text-muted"><i class="fa-solid fa-calendar-day me-1"></i>{{ event.date }} | by {{ event.uploaded_by }}</small>
                             </div>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event._id }}"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn btn-sm btn-outline-info shadow-sm rounded-circle p-2" title="Edit" data-bs-toggle="modal" data-bs-target="#editEventModal{{ event.id }}"><i class="fa-solid fa-pen"></i></button>
                                 <form method="POST" action="" class="m-0" onsubmit="return confirm('Delete this event?');" autocomplete="off">
                                     <input type="hidden" name="req_action" value="delete_event">
-                                    <input type="hidden" name="event_id" value="{{ event._id }}">
+                                    <input type="hidden" name="event_id" value="{{ event.id }}">
                                     <button class="btn btn-sm btn-outline-danger shadow-sm rounded-circle p-2" title="Delete"><i class="fa-solid fa-trash"></i></button>
                                 </form>
                             </div>
@@ -265,8 +321,8 @@ function addLabEntry() {
                     </li>
 
                     <!-- Edit Event Modal -->
-                    <div class="modal fade" id="editEventModal{{ event._id }}" tabindex="-1">
-                        <div class="modal-dialog">
+                    <div class="modal fade" id="editEventModal{{ event.id }}" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow rounded-4">
                                 <div class="modal-header bg-success text-white border-bottom-0 pb-3 rounded-top-4">
                                     <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-edit me-2"></i>Edit Event</h5>
@@ -275,7 +331,7 @@ function addLabEntry() {
                                 <div class="modal-body p-4 pt-3 text-start">
                                     <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
                                         <input type="hidden" name="req_action" value="edit_event">
-                                        <input type="hidden" name="event_id" value="{{ event._id }}">
+                                        <input type="hidden" name="event_id" value="{{ event.id }}">
                                         <div class="mb-3">
                                             <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
                                             <input type="text" class="form-control" name="title" value="{{ event.title }}" required>
@@ -308,68 +364,6 @@ function addLabEntry() {
             </div>
         </div>
     </div>
-</div>
 
-<!-- Add News Modal -->
-<div class="modal fade" id="addNewsModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header bg-danger text-white border-bottom-0 pb-3 rounded-top-4">
-                <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-plus-circle me-2"></i>Post News</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4 pt-3 text-start">
-                <form method="POST" action="" autocomplete="off">
-                    <input type="hidden" name="req_action" value="add_news">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
-                        <input type="text" class="form-control" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Content</label>
-                        <textarea class="form-control" name="content" rows="4" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-paper-plane me-2"></i>Publish News</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add Event Modal -->
-<div class="modal fade" id="addEventModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header bg-success text-white border-bottom-0 pb-3 rounded-top-4">
-                <h5 class="modal-title fw-bold text-white"><i class="fa-solid fa-calendar-plus me-2"></i>Add Department Event</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4 pt-3 text-start">
-                <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
-                    <input type="hidden" name="req_action" value="add_event">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Title</label>
-                        <input type="text" class="form-control" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
-                        <textarea class="form-control" name="description" rows="3" required></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Date</label>
-                            <input type="date" class="form-control" name="date" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Cover Image</label>
-                            <input type="file" class="form-control" name="image" accept="image/*" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold text-white py-2"><i class="fa-solid fa-check me-2"></i>Create Event</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 {% endblock %}

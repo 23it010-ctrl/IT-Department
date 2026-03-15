@@ -21,3 +21,5 @@ class Config:
         UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
     
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max limit
+    PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 7  # 7 days in seconds
+
