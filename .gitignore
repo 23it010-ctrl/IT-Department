@@ -32,3 +32,4 @@ build/
 # Logs and backups
 logs/
 *.bak
+static/uploads/
