@@ -1,47 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-    <h2 class="fw-bold"><i class="fa-solid fa-users me-2 text-primary"></i>Our Students</h2>
-    <div>
-        <form method="GET" class="d-flex" action="{{ url_for('students') }}" autocomplete="off">
-            <select name="year" class="form-select me-2" style="width: auto;">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 border-bottom pb-4 gap-3 text-center text-md-start animate-fade">
+    <h1 class="fw-bold mb-0 h2"><i class="fa-solid fa-users me-2 text-primary"></i>Our Students</h1>
+    <div class="w-100 w-md-auto">
+        <form method="GET" class="d-flex flex-wrap justify-content-center justify-content-md-end gap-2" action="{{ url_for('students') }}" autocomplete="off">
+            <select name="year" class="form-select" style="width: auto; min-width: 120px;">
                 <option value="">All Years</option>
                 <option value="1st" {% if year_filter == '1st' %}selected{% endif %}>1st Year</option>
                 <option value="2nd" {% if year_filter == '2nd' %}selected{% endif %}>2nd Year</option>
                 <option value="3rd" {% if year_filter == '3rd' %}selected{% endif %}>3rd Year</option>
                 <option value="4th" {% if year_filter == '4th' %}selected{% endif %}>4th Year</option>
             </select>
-            <input type="text" name="roll_number" class="form-control me-2" style="width: 150px;" placeholder="Roll No..." value="{{ roll_filter or '' }}">
-            <button class="btn btn-outline-primary" type="submit">Filter</button>
+            <input type="text" name="roll_number" class="form-control" style="width: 140px;" placeholder="Roll No..." value="{{ roll_filter or '' }}">
+            <button class="btn btn-primary px-4" type="submit">Filter Students</button>
         </form>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-3 g-md-4">
     {% for student in students %}
-    <div class="col-md-3 mb-4">
-        <div class="card h-100 shadow-sm border-0 text-center pt-4">
+    <div class="col-6 col-md-4 col-lg-3 mb-3 animate-fade" style="animation-delay: {{ loop.index0 * 0.05 }}s;">
+        <div class="card h-100 text-center pt-4 overflow-hidden border-0">
             {% if student.profile_photo %}
-                <img src="{{ url_for('uploaded_file', filename=student.profile_photo) }}" class="rounded-circle mx-auto mb-3" style="width: 100px; height: 100px; object-fit: cover;" alt="Profile">
+                <img src="{{ url_for('uploaded_file', filename=student.profile_photo) }}" class="rounded-circle mx-auto mb-3 shadow-sm" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid var(--primary-hover);" alt="Profile">
             {% else %}
-                <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 2rem;">
+                <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px; font-size: 1.5rem;">
                     {{ student.name[0] }}
                 </div>
             {% endif %}
-            <div class="card-body p-3">
-                <h5 class="card-title fw-bold mb-1">{{ student.name }}</h5>
-                <p class="text-muted mb-2">{{ student.year }} Year | Roll: {{ student.roll_number }}</p>
-                {% if student.email %}
-                <small class="text-secondary d-block"><i class="fa-solid fa-envelope me-1"></i>{{ student.email }}</small>
-                {% endif %}
+            <div class="card-body p-2 p-md-3">
+                <h6 class="card-title fw-bold mb-1 text-truncate" title="{{ student.name }}">{{ student.name }}</h6>
+                <p class="text-muted small mb-0">{{ student.year }} Year</p>
+                <div class="badge bg-dark bg-opacity-50 text-muted rounded-pill mt-2 fw-normal" style="font-size: 0.75rem;">Roll: {{ student.roll_number }}</div>
             </div>
         </div>
     </div>
     {% else %}
     <div class="col-12">
-        <div class="alert alert-info text-center p-4 rounded-4">
-            <i class="fa-solid fa-info-circle fa-2x mb-2 text-info"></i>
+        <div class="alert alert-info text-center p-5 rounded-4 animate-fade">
+            <i class="fa-solid fa-graduation-cap fa-3x mb-3 text-info"></i>
             <h5>No students found for the selected criteria.</h5>
+            <p class="mb-0 text-muted">Try changing your filters or checking back later.</p>
         </div>
     </div>
     {% endfor %}
