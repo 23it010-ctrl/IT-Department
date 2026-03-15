@@ -110,6 +110,19 @@ def init_db():
         )
     ''')
     
+    # Create admins table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS admins (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER UNIQUE,
+            name TEXT,
+            email TEXT,
+            phone TEXT,
+            profile_photo TEXT,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+
     # --- MIGRATIONS (Add missing columns to existing tables) ---
     def add_column_if_not_exists(table, column, definition):
         cursor.execute(f"PRAGMA table_info({table})")
