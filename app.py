@@ -605,13 +605,14 @@ def admin_students():
                 if not username or not password or not roll:
                     flash('Username, Password, and Roll Number are required.', 'danger')
                 else:
+                    print(f"DEBUG: Adding student {name} with roll {roll}")
                     hashed_pw = generate_password_hash(password)
                     cursor = conn.cursor()
                     cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed_pw, 'student'))
                     user_id = cursor.lastrowid
                     cursor.execute(
-                        "INSERT INTO students (user_id, name, roll_number, year, email, phone, is_approved) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                        (user_id, name, roll, year, email, phone, 1)
+                        "INSERT INTO students (user_id, name, roll_number, year, email, phone, is_approved, profile_locked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                        (user_id, name, roll, year, email, phone, 1, 0)
                     )
                     conn.commit()
                     flash('Student added successfully!', 'success')
@@ -635,13 +636,21 @@ def admin_students():
                 flash('Student updated successfully.', 'success')
                 
             return redirect(url_for('admin_students'))
-        except sqlite3.IntegrityError:
-            flash('Error: Username or Roll Number already exists.', 'danger')
+        except sqlite3.IntegrityError as e:
+            flash(f'Database Error: Username or Roll Number already exists. ({str(e)})', 'danger')
         except Exception as e:
+            print(f"CRITICAL ERROR in admin_students POST: {str(e)}")
             flash(f'System Error: {str(e)}', 'danger')
             
-    students_list = conn.execute("SELECT * FROM students ORDER BY is_approved ASC, year ASC").fetchall()
-    students_data = [dict(s) for s in students_list]
+    # GET section - always runs if no redirect happens
+    try:
+        students_list = conn.execute("SELECT * FROM students ORDER BY is_approved ASC, year ASC").fetchall()
+        students_data = [dict(s) for s in students_list]
+    except Exception as e:
+        print(f"CRITICAL ERROR fetching students: {str(e)}")
+        students_data = []
+        flash("Could not load student list. The database may need to be re-initialized.", "danger")
+        
     conn.close()
     return render_template('admin_students.html', students=students_data)
 

@@ -110,28 +110,46 @@ def init_db():
         )
     ''')
     
-    # Insert default admin if not exists
+    # --- MIGRATIONS (Add missing columns to existing tables) ---
+    def add_column_if_not_exists(table, column, definition):
+        cursor.execute(f"PRAGMA table_info({table})")
+        columns = [row[1] for row in cursor.fetchall()]
+        if column not in columns:
+            print(f"🔧 Migrating: Adding column '{column}' to table '{table}'...")
+            cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+
+    # Students table migrations
+    add_column_if_not_exists('students', 'is_approved', 'INTEGER DEFAULT 0')
+    add_column_if_not_exists('students', 'profile_locked', 'INTEGER DEFAULT 0')
+    add_column_if_not_exists('students', 'email', 'TEXT')
+    add_column_if_not_exists('students', 'phone', 'TEXT')
+    add_column_if_not_exists('students', 'profile_photo', 'TEXT')
+
+    # Faculty table migrations
+    add_column_if_not_exists('faculty', 'profile_photo', 'TEXT')
+    add_column_if_not_exists('faculty', 'email', 'TEXT')
+    add_column_if_not_exists('faculty', 'phone', 'TEXT')
+
+    # Achievements table migrations
+    add_column_if_not_exists('achievements', 'is_approved', 'INTEGER DEFAULT 0')
+
+    # Admins table migrations
+    add_column_if_not_exists('admins', 'profile_photo', 'TEXT')
+    add_column_if_not_exists('admins', 'email', 'TEXT')
+    add_column_if_not_exists('admins', 'phone', 'TEXT')
+    
+    # Handle Default Admin and Linked Data
     cursor.execute("SELECT id FROM users WHERE role='admin'")
-    if not cursor.fetchone():
+    admin_users = cursor.fetchall()
+    if not admin_users:
         hashed_pw = generate_password_hash('admin123')
         cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('admin', hashed_pw, 'admin'))
+        admin_id = cursor.lastrowid
         print("Default admin user created (Username: admin, Password: admin123)")
-        
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS admins (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER UNIQUE,
-            name TEXT,
-            email TEXT,
-            phone TEXT,
-            profile_photo TEXT,
-            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-        )
-    ''')
-    cursor.execute("SELECT id FROM users WHERE role='admin'")
-    admins = cursor.fetchall()
-    for admin in admins:
-        cursor.execute("INSERT OR IGNORE INTO admins (user_id, name) VALUES (?, ?)", (admin[0], 'Administrator'))
+    else:
+        admin_id = admin_users[0][0]
+
+    cursor.execute("INSERT OR IGNORE INTO admins (user_id, name) VALUES (?, ?)", (admin_id, 'Administrator'))
     
     conn.commit()
     
