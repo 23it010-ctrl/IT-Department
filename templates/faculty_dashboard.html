@@ -10,7 +10,7 @@
         <div class="card shadow-sm border-0 rounded-4 text-center p-4">
             <h5 class="fw-bold mb-4 border-bottom pb-3"><i class="fa-regular fa-id-card me-2"></i>Profile Image</h5>
             {% if faculty.profile_photo %}
-            <img src="{{ url_for('static', filename='uploads/' + faculty.profile_photo) }}" class="rounded-circle img-thumbnail mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid var(--success);">
+            <img src="{{ url_for('uploaded_file', filename=faculty.profile_photo) }}" class="rounded-circle img-thumbnail mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid var(--success);">
             {% else %}
             <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 150px; height: 150px; font-size: 4rem;">
                 {{ faculty.name[0] }}

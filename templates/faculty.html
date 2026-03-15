@@ -9,7 +9,7 @@
         <div class="card h-100 shadow-sm border-0 pt-4 p-3">
             <div class="card-body text-center">
                 {% if member.profile_photo %}
-                    <img src="{{ url_for('static', filename='uploads/' + member.profile_photo) }}" class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid var(--primary);">
+                    <img src="{{ url_for('uploaded_file', filename=member.profile_photo) }}" class="rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; object-fit: cover; border: 2px solid var(--primary);">
                 {% else %}
                     <div class="rounded-circle bg-primary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
                         {{ member.name[0] }}

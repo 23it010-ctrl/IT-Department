@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ site_name }}</title>
     {% if site_icon %}
-    <link rel="icon" href="{{ url_for('static', filename='uploads/' + site_icon) }}">
+    <link rel="icon" href="{{ url_for('uploaded_file', filename=site_icon) }}">
     {% else %}
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
     {% endif %}
@@ -23,7 +23,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
                 {% if site_icon %}
-                <img src="{{ url_for('static', filename='uploads/' + site_icon) }}" alt="Logo" width="30" height="30" class="me-2 rounded-circle object-fit-cover shadow-sm bg-white" style="border: 2px solid white;">
+                <img src="{{ url_for('uploaded_file', filename=site_icon) }}" alt="Logo" width="30" height="30" class="me-2 rounded-circle object-fit-cover shadow-sm bg-white" style="border: 2px solid white;">
                 {% else %}
                 <i class="fa-solid fa-graduation-cap me-2"></i>
                 {% endif %}

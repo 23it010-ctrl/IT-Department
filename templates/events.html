@@ -8,7 +8,7 @@
     <div class="col-md-6 mb-4">
         <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden event-card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-5px)'; this.classList.add('shadow');" onmouseout="this.style.transform='translateY(0)'; this.classList.remove('shadow');" data-bs-toggle="modal" data-bs-target="#eventModal{{ event.id }}">
             {% if event.image_url %}
-            <img src="{{ url_for('static', filename='uploads/' + event.image_url) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Event Image">
+            <img src="{{ url_for('uploaded_file', filename=event.image_url) }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Event Image">
             {% endif %}
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="modal-body p-0">
                     {% if event.image_url %}
-                    <img src="{{ url_for('static', filename='uploads/' + event.image_url) }}" class="img-fluid w-100" style="max-height: 450px; object-fit: cover;" alt="Event Image">
+                    <img src="{{ url_for('uploaded_file', filename=event.image_url) }}" class="img-fluid w-100" style="max-height: 450px; object-fit: cover;" alt="Event Image">
                     {% endif %}
                     <div class="p-4">
                         <h2 class="fw-bold mb-3 text-dark">{{ event.title }}</h2>

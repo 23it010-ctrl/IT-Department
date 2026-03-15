@@ -33,7 +33,7 @@
                         </div>
                         <div class="d-flex gap-2">
                             {% if item.proof_url %}
-                            <a href="{{ url_for('static', filename='uploads/' + item.proof_url) }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-eye me-1"></i>Proof</a>
+                            <a href="{{ url_for('uploaded_file', filename=item.proof_url) }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-eye me-1"></i>Proof</a>
                             {% endif %}
                             <form method="POST" action="" class="w-100 m-0" autocomplete="off">
                                 <input type="hidden" name="req_action" value="approve">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="d-flex gap-2">
                             {% if item.proof_url %}
-                            <a href="{{ url_for('static', filename='uploads/' + item.proof_url) }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-eye me-1"></i>Proof</a>
+                            <a href="{{ url_for('uploaded_file', filename=item.proof_url) }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100"><i class="fa-solid fa-eye me-1"></i>Proof</a>
                             {% endif %}
                             <form method="POST" action="" class="w-100 m-0" onsubmit="return confirm('Delete this approved achievement permanently?');" autocomplete="off">
                                 <input type="hidden" name="req_action" value="delete">

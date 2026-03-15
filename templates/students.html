@@ -22,7 +22,7 @@
     <div class="col-md-3 mb-4">
         <div class="card h-100 shadow-sm border-0 text-center pt-4">
             {% if student.profile_photo %}
-                <img src="{{ url_for('static', filename='uploads/' + student.profile_photo) }}" class="rounded-circle mx-auto mb-3" style="width: 100px; height: 100px; object-fit: cover;" alt="Profile">
+                <img src="{{ url_for('uploaded_file', filename=student.profile_photo) }}" class="rounded-circle mx-auto mb-3" style="width: 100px; height: 100px; object-fit: cover;" alt="Profile">
             {% else %}
                 <div class="rounded-circle bg-secondary text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 2rem;">
                     {{ student.name[0] }}
