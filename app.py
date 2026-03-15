@@ -1,10 +1,11 @@
 import os
 import json
 import sqlite3
+import shutil
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request, redirect, url_for, flash, session, g, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta
 from config import Config
 from init_db import init_db
 
@@ -12,10 +13,27 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.permanent_session_lifetime = timedelta(days=7)
 
-print("--- 🛡️  Starting IT-Department System in Data-Safety Mode ---")
-print("Initializing database... Existing student and faculty data will be preserved.")
-# Auto-initialize database
-init_db()
+# --- VERCEL PERSISTENCE WORKAROUND ---
+def ensure_db():
+    if Config.IS_VERCEL:
+        source = os.path.join(Config.BASE_DIR, 'database.db')
+        target = Config.SQLITE_DB
+        os.makedirs(Config.UPLOAD_FOLDER, exist_ok=True)
+        if os.path.exists(source) and not os.path.exists(target):
+            try:
+                shutil.copy2(source, target)
+                print(f"DEBUG: Seeded database from {source}")
+            except Exception as e:
+                print(f"DEBUG: Seeding failed: {e}")
+    
+    # Initialize/Migrate
+    try:
+        init_db()
+    except Exception as e:
+        print(f"CRITICAL: Database initialization failed: {e}")
+
+# Run setup
+ensure_db()
 
 # Configure Uploads
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'docx'}

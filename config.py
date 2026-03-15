@@ -4,22 +4,23 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'super-secret-key-123'
     
     # Check if running on Vercel
-    IS_VERCEL = os.environ.get('VERCEL') == '1'
+    IS_VERCEL = os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_URL') is not None
     
-    # SQLite Configuration
+    # Base directory
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # SQLite & Upload Configuration
     if IS_VERCEL:
         SQLITE_DB = '/tmp/database.db'
         UPLOAD_FOLDER = '/tmp/uploads'
-        
-        # Persistence Workaround: Seed the ephemeral DB from the one pushed to Git
-        import shutil
-        SOURCE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
-        if os.path.exists(SOURCE_DB) and not os.path.exists(SQLITE_DB):
-            shutil.copy2(SOURCE_DB, SQLITE_DB)
     else:
-        SQLITE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
-        UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')
+        SQLITE_DB = os.path.join(BASE_DIR, 'database.db')
+        UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
     
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max limit
-    PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 7  # 7 days in seconds
+    # Create upload folder if not exists (local only, Vercel done in app.py)
+    if not IS_VERCEL and not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+        
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+    PERMANENT_SESSION_LIFETIME = 60 * 60 * 24 * 7
 
