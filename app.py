@@ -284,16 +284,18 @@ def register():
             cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed_pw, 'student'))
             user_id = cursor.lastrowid
             cursor.execute(
-                "INSERT INTO students (user_id, name, roll_number, year) VALUES (?, ?, ?, ?)", 
-                (user_id, name, roll_number, year)
+                "INSERT INTO students (user_id, name, roll_number, year, is_approved, profile_locked) VALUES (?, ?, ?, ?, ?, ?)", 
+                (user_id, name, roll_number, year, 0, 0)
             )
             conn.commit()
             flash('Registration successful! Waiting for admin approval.', 'success')
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
+            conn.rollback()
             flash("Username or Roll Number already exists.", 'danger')
         except Exception as err:
-            flash(f"Error: {err}", 'danger')
+            conn.rollback()
+            flash(f"Registration Error: {err}", 'danger')
         finally:
             conn.close()
             
@@ -620,20 +622,25 @@ def admin_students():
                 email = request.form.get('email', '')
                 phone = request.form.get('phone', '')
                 
-                if not username or not password or not roll:
-                    flash('Username, Password, and Roll Number are required.', 'danger')
+                if not username or not password or not roll or not name:
+                    flash('Required fields: Username, Password, Name, and Roll Number.', 'danger')
                 else:
-                    print(f"DEBUG: Adding student {name} with roll {roll}")
-                    hashed_pw = generate_password_hash(password)
-                    cursor = conn.cursor()
-                    cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed_pw, 'student'))
-                    user_id = cursor.lastrowid
-                    cursor.execute(
-                        "INSERT INTO students (user_id, name, roll_number, year, email, phone, is_approved, profile_locked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-                        (user_id, name, roll, year, email, phone, 1, 0)
-                    )
-                    conn.commit()
-                    flash('Student added successfully!', 'success')
+                    try:
+                        cursor = conn.cursor()
+                        cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, generate_password_hash(password), 'student'))
+                        user_id = cursor.lastrowid
+                        cursor.execute(
+                            "INSERT INTO students (user_id, name, roll_number, year, email, phone, is_approved, profile_locked) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
+                            (user_id, name, roll, year, email, phone, 1, 0)
+                        )
+                        conn.commit()
+                        flash('Student record created successfully!', 'success')
+                    except sqlite3.IntegrityError:
+                        conn.rollback()
+                        flash('Database Error: Username or Roll Number already exists.', 'danger')
+                    except Exception as sub_e:
+                        conn.rollback()
+                        flash(f'Error adding student: {str(sub_e)}', 'danger')
             elif action == 'delete':
                 stu_row = conn.execute("SELECT user_id FROM students WHERE id = ?", (student_id,)).fetchone()
                 if stu_row:
@@ -644,21 +651,20 @@ def admin_students():
                     conn.commit()
                     flash('Student permanently deleted.', 'success')
             elif action == 'edit':
-                name = request.form.get('name')
-                year = request.form.get('year')
-                roll = request.form.get('roll_number')
-                email = request.form.get('email', '')
-                phone = request.form.get('phone', '')
-                conn.execute("UPDATE students SET name=?, year=?, roll_number=?, email=?, phone=? WHERE id=?", (name, year, roll, email, phone, student_id))
+                nm = request.form.get('name')
+                yr = request.form.get('year')
+                rl = request.form.get('roll_number')
+                em = request.form.get('email', '')
+                ph = request.form.get('phone', '')
+                conn.execute("UPDATE students SET name=?, year=?, roll_number=?, email=?, phone=? WHERE id=?", (nm, yr, rl, em, ph, student_id))
                 conn.commit()
                 flash('Student updated successfully.', 'success')
                 
             return redirect(url_for('admin_students'))
-        except sqlite3.IntegrityError as e:
-            flash(f'Database Error: Username or Roll Number already exists. ({str(e)})', 'danger')
-        except Exception as e:
-            print(f"CRITICAL ERROR in admin_students POST: {str(e)}")
-            flash(f'System Error: {str(e)}', 'danger')
+        except Exception as top_e:
+            print(f"CRITICAL ERROR in admin_students POST: {str(top_e)}")
+            flash(f'System Error: {str(top_e)}', 'danger')
+            return redirect(url_for('admin_students'))
             
     # GET section - always runs if no redirect happens
     try:
@@ -695,16 +701,23 @@ def admin_faculty():
                 if not username or not password or not name:
                     flash('All required fields must be filled.', 'danger')
                 else:
-                    hashed_pw = generate_password_hash(password)
-                    cursor = conn.cursor()
-                    cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed_pw, 'faculty'))
-                    user_id = cursor.lastrowid
-                    cursor.execute(
-                        "INSERT INTO faculty (user_id, name, department, email, phone) VALUES (?, ?, ?, ?, ?)",
-                        (user_id, name, dept, email, phone)
-                    )
-                    conn.commit()
-                    flash('Faculty added successfully!', 'success')
+                    try:
+                        hashed_pw = generate_password_hash(password)
+                        cursor = conn.cursor()
+                        cursor.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", (username, hashed_pw, 'faculty'))
+                        user_id = cursor.lastrowid
+                        cursor.execute(
+                            "INSERT INTO faculty (user_id, name, department, email, phone) VALUES (?, ?, ?, ?, ?)",
+                            (user_id, name, dept, email, phone)
+                        )
+                        conn.commit()
+                        flash('Faculty added successfully!', 'success')
+                    except sqlite3.IntegrityError:
+                        conn.rollback()
+                        flash('Error: Username already exists.', 'danger')
+                    except Exception as sub_e:
+                        conn.rollback()
+                        flash(f'Error adding faculty: {str(sub_e)}', 'danger')
             elif action == 'delete':
                 fac_row = conn.execute("SELECT user_id FROM faculty WHERE id = ?", (fac_id,)).fetchone()
                 if fac_row:
@@ -723,13 +736,16 @@ def admin_faculty():
                 flash('Faculty updated successfully.', 'success')
                 
             return redirect(url_for('admin_faculty'))
-        except sqlite3.IntegrityError:
-            flash('Error: Username already exists.', 'danger')
-        except Exception as e:
-            flash(f'System Error: {str(e)}', 'danger')
+        except Exception as top_e:
+            flash(f'System Error: {str(top_e)}', 'danger')
+            return redirect(url_for('admin_faculty'))
             
-    faculty_list = conn.execute("SELECT * FROM faculty").fetchall()
-    faculty_data = [dict(f) for f in faculty_list]
+    try:
+        faculty_list = conn.execute("SELECT * FROM faculty").fetchall()
+        faculty_data = [dict(f) for f in faculty_list]
+    except Exception as e:
+        faculty_data = []
+        flash("Could not load faculty records.", "danger")
     conn.close()
     return render_template('admin_faculty.html', faculty=faculty_data)
 
