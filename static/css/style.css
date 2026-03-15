@@ -28,8 +28,30 @@
     to { transform: translateX(0); opacity: 1; }
 }
 
-.animate-fade { animation: fadeIn 0.8s ease forwards; }
-.animate-slide { animation: slideIn 0.6s ease forwards; }
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Offset for sticky header */
+}
+
+.animate-fade { 
+    animation: fadeIn 0.8s ease forwards; 
+    will-change: transform, opacity;
+}
+.animate-slide { 
+    animation: slideIn 0.6s ease forwards; 
+    will-change: transform, opacity;
+}
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
 
 body {
     font-family: 'Inter', sans-serif;
@@ -139,6 +161,12 @@ h1, h2, h3 {
     transform: translateY(-5px);
     box-shadow: var(--glow-purple);
     border-color: var(--secondary);
+}
+
+@media (max-width: 768px) {
+    .card:hover {
+        transform: none; /* Reduce layout shifts on mobile touch */
+    }
 }
 
 .card-header, .modal-header {
@@ -319,9 +347,11 @@ footer {
     .navbar-collapse {
         background: var(--bg-main);
         margin-top: 1rem;
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid var(--glass-border);
+        padding: 1.5rem;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        backdrop-filter: none !important; /* Performance on mobile */
     }
 }
 
@@ -371,15 +401,25 @@ footer {
 @media (max-width: 480px) {
     .hero-section {
         padding: 40px 15px !important;
+        margin-top: 10px;
     }
     
     .navbar {
         padding: 0.5rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1020;
     }
     
     .container {
         padding-left: 15px;
         padding-right: 15px;
+    }
+
+    /* Disable expensive blur on low-end mobile */
+    .navbar, .hero-section, .navbar-collapse {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 }
 
