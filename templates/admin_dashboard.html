@@ -56,6 +56,41 @@
             </div>
         </div>
 
+        <div class="card mb-4 animate-fade" style="animation-delay: 0.15s;">
+            <div class="card-header py-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-key text-danger me-2"></i>Change Login Credentials</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('admin_dashboard') }}" autocomplete="off">
+                    <input type="hidden" name="req_action" value="change_credentials">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">New Username</label>
+                            <input type="text" class="form-control" name="new_username" value="{{ current_user.username if current_user else '' }}" required>
+                            <small class="text-muted">Your current login username.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Current Password</label>
+                            <input type="password" class="form-control" name="current_password" autocomplete="new-password" required>
+                            <small class="text-muted">Required for security verification.</small>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">New Password</label>
+                            <input type="password" class="form-control" name="new_password" autocomplete="new-password">
+                            <small class="text-muted">Leave blank to keep current password.</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Confirm New Password</label>
+                            <input type="password" class="form-control" name="confirm_password" autocomplete="new-password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold"><i class="fa-solid fa-shield-halved me-2"></i>Update Credentials</button>
+                </form>
+            </div>
+        </div>
+
         <div class="card animate-fade" style="animation-delay: 0.2s;">
             <div class="card-header py-3">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-cogs me-2"></i>Management Actions</h5>

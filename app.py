@@ -542,6 +542,39 @@ def admin_dashboard():
             conn.commit()
             flash('Profile updated successfully!', 'success')
             return redirect(url_for('admin_dashboard'))
+        
+        elif action == 'change_credentials':
+            current_password = request.form.get('current_password', '')
+            new_username = request.form.get('new_username', '').strip()
+            new_password = request.form.get('new_password', '')
+            confirm_password = request.form.get('confirm_password', '')
+            
+            # Fetch current user record for verification
+            user_row = conn.execute("SELECT * FROM users WHERE id = ?", (g.user['id'],)).fetchone()
+            
+            if not check_password_hash(user_row['password'], current_password):
+                flash('Current password is incorrect.', 'danger')
+            elif not new_username:
+                flash('Username cannot be empty.', 'danger')
+            elif new_password and new_password != confirm_password:
+                flash('New passwords do not match.', 'danger')
+            else:
+                try:
+                    if new_password:
+                        hashed_new = generate_password_hash(new_password)
+                        conn.execute("UPDATE users SET username=?, password=? WHERE id=?", (new_username, hashed_new, g.user['id']))
+                    else:
+                        conn.execute("UPDATE users SET username=? WHERE id=?", (new_username, g.user['id']))
+                    conn.commit()
+                    # Clear session so admin must log in with new credentials
+                    session.clear()
+                    flash('Login credentials updated successfully! Please log in again with the new details.', 'success')
+                    return redirect(url_for('login'))
+                except sqlite3.IntegrityError:
+                    conn.rollback()
+                    flash('Username already taken. Please choose a different one.', 'danger')
+            
+            return redirect(url_for('admin_dashboard'))
     
     pending_students = conn.execute("SELECT count(*) as count FROM students WHERE is_approved = 0").fetchone()['count']
     pending_achievements = conn.execute("SELECT count(*) as count FROM achievements WHERE is_approved = 0").fetchone()['count']
@@ -555,7 +588,8 @@ def admin_dashboard():
     return render_template('admin_dashboard.html', 
                            pending_students=pending_students, 
                            pending_achievements=pending_achievements,
-                           admin=admin_data)
+                           admin=admin_data,
+                           current_user=g.user)
 
 @app.route('/admin/achievements', methods=['GET', 'POST'])
 def admin_achievements():
