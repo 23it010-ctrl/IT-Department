@@ -37,7 +37,10 @@ ensure_db()
 
 # Configure Uploads
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'docx'}
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+try:
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+except Exception as e:
+    print(f"DEBUG: Could not create upload folder at startup (expected on Vercel build): {e}")
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
