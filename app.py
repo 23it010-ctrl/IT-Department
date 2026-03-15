@@ -336,6 +336,16 @@ def student_dashboard():
             flash('Profile locked successfully!', 'success')
             return redirect(url_for('student_dashboard'))
             
+        elif action == 'delete_self':
+            # Completely clear student and user record
+            conn.execute("DELETE FROM achievements WHERE student_id = ?", (student_data['id'],))
+            conn.execute("DELETE FROM students WHERE id = ?", (student_data['id'],))
+            conn.execute("DELETE FROM users WHERE id = ?", (g.user['id'],))
+            conn.commit()
+            session.clear()
+            flash('Your account and all data have been permanently deleted.', 'info')
+            return redirect(url_for('home'))
+            
     student_data_row = conn.execute("SELECT * FROM students WHERE user_id = ?", (g.user['id'],)).fetchone()
     student_data = dict(student_data_row)
     
@@ -423,6 +433,17 @@ def faculty_dashboard():
                 ))
                 conn.commit()
                 flash('Notes uploaded successfully!', 'success')
+                
+        elif action == 'delete_self':
+            # Completely clear faculty and user record
+            conn.execute("DELETE FROM news WHERE faculty_id = ?", (faculty_data['id'],))
+            conn.execute("DELETE FROM events WHERE faculty_id = ?", (faculty_data['id'],))
+            conn.execute("DELETE FROM faculty WHERE id = ?", (faculty_data['id'],))
+            conn.execute("DELETE FROM users WHERE id = ?", (g.user['id'],))
+            conn.commit()
+            session.clear()
+            flash('Your faculty account and all your contributions have been permanently deleted.', 'info')
+            return redirect(url_for('home'))
     
     news_rows = conn.execute("SELECT * FROM news WHERE faculty_id = ?", (faculty_data['id'],)).fetchall()
     faculty_news = [dict(n) for n in news_rows]

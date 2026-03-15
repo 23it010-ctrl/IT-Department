@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="dashboard-header bg-dark text-white rounded-5 shadow-sm p-4 d-flex flex-column flex-md-row align-items-center justify-content-between border-start border-warning border-5 gap-3 text-center text-md-start">
-    <h2 class="fw-bold mb-0 text-white"><i class="fa-solid fa-user-shield text-warning me-3"></i>Admin Dashboard</h2>
+<div class="dashboard-header animate-fade p-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0"><i class="fa-solid fa-user-shield text-warning me-3"></i>Admin Dashboard</h2>
     <span class="badge bg-warning text-dark rounded-pill px-4 py-2 text-uppercase fw-bold"><i class="fa-solid fa-crown me-2"></i>Administrator</span>
 </div>
 
@@ -24,8 +24,8 @@
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm border-0 rounded-4 mb-4">
-            <div class="card-header bg-white border-bottom py-3">
+        <div class="card mb-4 animate-fade" style="animation-delay: 0.1s;">
+            <div class="card-header py-3">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-user-edit text-warning me-2"></i>Profile Details</h5>
             </div>
             <div class="card-body p-4">
@@ -56,14 +56,14 @@
             </div>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-white border-bottom py-3">
-                <h5 class="fw-bold mb-0"><i class="fa-solid fa-cogs text-dark me-2"></i>Management Actions</h5>
+        <div class="card animate-fade" style="animation-delay: 0.2s;">
+            <div class="card-header py-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-cogs me-2"></i>Management Actions</h5>
             </div>
             <div class="card-body p-4">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                        <div class="card h-100 p-3 text-center" style="background: rgba(255,255,255,0.03);">
                             <i class="fa-solid fa-user-check fa-2x text-success mb-2"></i>
                             <h6 class="fw-bold">Manage Students</h6>
                             {% if pending_students > 0 %}
@@ -74,7 +74,7 @@
                     </div>
                     
                     <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                        <div class="card h-100 p-3 text-center" style="background: rgba(255,255,255,0.03);">
                             <i class="fa-solid fa-chalkboard-teacher fa-2x text-primary mb-2"></i>
                             <h6 class="fw-bold">Manage Faculty</h6>
                             <a href="{{ url_for('admin_faculty') }}" class="btn btn-outline-primary btn-sm rounded-pill mt-auto fw-bold"><i class="fa-solid fa-users-cog me-1"></i>Open</a>
@@ -82,7 +82,7 @@
                     </div>
                     
                     <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                        <div class="card h-100 p-3 text-center" style="background: rgba(255,255,255,0.03);">
                             <i class="fa-solid fa-globe fa-2x text-info mb-2"></i>
                             <h6 class="fw-bold">Website Content</h6>
                             <a href="{{ url_for('admin_content') }}" class="btn btn-outline-info btn-sm rounded-pill mt-auto fw-bold text-dark"><i class="fa-solid fa-edit me-1"></i>Open</a>
@@ -90,7 +90,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 text-center p-3">
+                        <div class="card h-100 p-3 text-center" style="background: rgba(255,255,255,0.03);">
                             <i class="fa-solid fa-trophy fa-2x text-warning mb-2"></i>
                             <h6 class="fw-bold">Student Achievements</h6>
                             {% if pending_achievements > 0 %}

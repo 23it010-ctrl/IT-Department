@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="dashboard-header bg-white rounded-5 shadow-sm p-4 d-flex flex-column flex-md-row align-items-center justify-content-between mb-5 border-start border-primary border-5 gap-3 text-center text-md-start">
-    <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-user-graduate text-primary me-3"></i>Welcome, {{ student.name }}!</h2>
+<div class="dashboard-header animate-fade p-4 d-flex flex-column flex-md-row align-items-center justify-content-between mb-5 gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0"><i class="fa-solid fa-user-graduate text-primary me-3"></i>Welcome, {{ student.name }}!</h2>
     <span class="badge {{ 'bg-success' if student.is_approved else 'bg-warning text-dark' }} fs-6 rounded-pill px-4 py-2 shadow-sm">
         <i class="fa-solid {{ 'fa-check-circle' if student.is_approved else 'fa-clock' }} me-2"></i>
         {{ 'Approved' if student.is_approved else 'Pending Approval' }}
@@ -31,8 +31,8 @@
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm border-0 rounded-4 mb-4">
-            <div class="card-header bg-white border-bottom py-3">
+        <div class="card mb-4 animate-fade" style="animation-delay: 0.1s;">
+            <div class="card-header py-3">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-user-edit text-primary me-2"></i>Profile Details</h5>
             </div>
             <div class="card-body p-4">
@@ -62,13 +62,19 @@
                         <label class="form-label fw-bold">Upload/Change Profile Photo</label>
                         <input type="file" class="form-control bg-light" name="profile_photo" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold me-2"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4 fw-bold" onclick="if(confirm('Are you sure you want to PERMANENTLY delete your account? This cannot be undone.')) { document.getElementById('deleteAccountForm').submit(); }">
+                        <i class="fa-solid fa-user-times me-2"></i>Delete Account
+                    </button>
+                </form>
+                <form id="deleteAccountForm" method="POST" style="display:none;">
+                    <input type="hidden" name="req_action" value="delete_self">
                 </form>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <div class="card animate-fade" style="animation-delay: 0.2s;">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-trophy text-warning me-2"></i>Achievements & Events</h5>
                 <button type="button" class="btn btn-sm btn-success rounded-pill fw-bold px-3" data-bs-toggle="modal" data-bs-target="#addAchievementModal">
                     <i class="fa-solid fa-plus me-1"></i>Add New

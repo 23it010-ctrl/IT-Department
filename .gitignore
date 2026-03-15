@@ -12,7 +12,7 @@ env/
 .venv/
 
 # Flask / SQLite
-*.db
+# *.db
 *.sqlite3
 instance/
 

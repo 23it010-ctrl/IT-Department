@@ -10,6 +10,12 @@ class Config:
     if IS_VERCEL:
         SQLITE_DB = '/tmp/database.db'
         UPLOAD_FOLDER = '/tmp/uploads'
+        
+        # Persistence Workaround: Seed the ephemeral DB from the one pushed to Git
+        import shutil
+        SOURCE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
+        if os.path.exists(SOURCE_DB) and not os.path.exists(SQLITE_DB):
+            shutil.copy2(SOURCE_DB, SQLITE_DB)
     else:
         SQLITE_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'database.db')
         UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads')

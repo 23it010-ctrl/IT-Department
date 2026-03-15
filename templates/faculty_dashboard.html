@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="dashboard-header bg-white rounded-5 shadow-sm p-4 d-flex flex-column flex-md-row align-items-center justify-content-between border-start border-success border-5 gap-3 text-center text-md-start">
-    <h2 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-chalkboard-teacher text-success me-3"></i>Faculty Dashboard</h2>
+<div class="dashboard-header animate-fade p-4 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-center text-md-start">
+    <h2 class="fw-bold mb-0"><i class="fa-solid fa-chalkboard-teacher text-success me-3"></i>Faculty Dashboard</h2>
     <span class="badge bg-success rounded-pill px-4 py-2 text-uppercase fw-bold"><i class="fa-solid fa-user-tie me-2"></i>{{ faculty.name }}</span>
 </div>
 
@@ -24,8 +24,8 @@
     </div>
 
     <div class="col-md-8">
-        <div class="card shadow-sm border-0 rounded-4 mb-4">
-            <div class="card-header bg-white border-bottom py-3">
+        <div class="card mb-4 animate-fade" style="animation-delay: 0.1s;">
+            <div class="card-header py-3">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-user-edit text-success me-2"></i>Profile Details</h5>
             </div>
             <div class="card-body p-4">
@@ -56,19 +56,25 @@
                         <label class="form-label fw-bold">Upload/Change Profile Photo</label>
                         <input type="file" class="form-control bg-light" name="profile_photo" accept="image/*">
                     </div>
-                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold me-2"><i class="fa-solid fa-save me-2"></i>Save Changes</button>
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4 fw-bold" onclick="if(confirm('Are you sure you want to PERMANENTLY delete your faculty account? This will remove all your news and events as well.')) { document.getElementById('deleteFacultyForm').submit(); }">
+                        <i class="fa-solid fa-user-times me-2"></i>Delete Account
+                    </button>
+                </form>
+                <form id="deleteFacultyForm" method="POST" style="display:none;">
+                    <input type="hidden" name="req_action" value="delete_self">
                 </form>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-white border-bottom py-3">
+        <div class="card animate-fade" style="animation-delay: 0.2s;">
+            <div class="card-header py-3">
                 <h5 class="fw-bold mb-0"><i class="fa-solid fa-bolt text-danger me-2"></i>Quick Actions</h5>
             </div>
             <div class="card-body p-4">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm border border-light bg-light rounded-4 p-3 text-center">
+                        <div class="card h-100 p-3 text-center" style="background: rgba(255,255,255,0.03);">
                             <i class="fa-solid fa-users fa-2x text-primary mb-2"></i>
                             <h6 class="fw-bold mb-1">View Students</h6>
                             <a href="{{ url_for('faculty_students') }}" class="btn btn-outline-primary btn-sm rounded-pill mt-auto fw-bold"><i class="fa-solid fa-eye me-1"></i>Open</a>

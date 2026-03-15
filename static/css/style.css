@@ -12,7 +12,21 @@
     --border-color: rgba(255, 255, 255, 0.1);
     --glass-bg: rgba(15, 23, 42, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-fade { animation: fadeIn 0.8s ease forwards; }
+.animate-slide { animation: slideIn 0.6s ease forwards; }
 
 body {
     font-family: 'Inter', sans-serif;
@@ -263,8 +277,27 @@ footer {
     color: var(--text-muted);
 }
 
-/* Responsive adjustments for Mobile, Tablets & PCs */
+/* Responsive adjustments for All Devices */
+@media (max-width: 1200px) {
+    .container { max-width: 95%; }
+}
+
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: var(--bg-main);
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--glass-border);
+    }
+}
+
 @media (max-width: 768px) {
+    :root {
+        --fluid-h1: 2.25rem;
+        --fluid-h2: 1.75rem;
+    }
+    
     .navbar-brand {
         font-size: 1.25rem;
     }
@@ -274,11 +307,8 @@ footer {
         border-radius: 20px !important;
     }
     
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.5rem; }
-    h3 { font-size: 1.25rem; }
-    h4 { font-size: 1.1rem; }
-    h5 { font-size: 1rem; }
+    h1 { font-size: var(--fluid-h1); }
+    h2 { font-size: var(--fluid-h2); }
     
     .card {
         margin-bottom: 20px;
@@ -289,23 +319,43 @@ footer {
     }
     
     .btn {
-        padding: 8px 16px;
-        font-size: 0.9rem;
+        width: 100%;
+        margin-bottom: 10px;
     }
-    
-    .table td, .table th {
-        font-size: 0.85rem;
-        padding: 0.5rem;
+
+    .table-responsive {
+        border-radius: 12px;
+        overflow-x: auto;
     }
     
     .list-group-item .d-flex {
         flex-direction: column;
         gap: 15px;
     }
+}
+
+/* Specific adjustments for small mobile devices (Android/iOS) */
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 40px 15px !important;
+    }
     
-    .list-group-item .d-flex > div:last-child {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
+    .navbar {
+        padding: 0.5rem 0;
+    }
+    
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* Tablet improvements */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .col-md-3 {
+        width: 50%;
+    }
+    .hero-section {
+        padding: 80px 40px !important;
     }
 }
