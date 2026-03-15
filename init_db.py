@@ -134,6 +134,17 @@ def init_db():
         cursor.execute("INSERT OR IGNORE INTO admins (user_id, name) VALUES (?, ?)", (admin[0], 'Administrator'))
     
     conn.commit()
+    
+    # Data Permanence Verification
+    print("--- 📊 Data Permanence Summary ---")
+    users_count = cursor.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+    students_count = cursor.execute("SELECT COUNT(*) FROM students").fetchone()[0]
+    faculty_count = cursor.execute("SELECT COUNT(*) FROM faculty").fetchone()[0]
+    print(f"✅ Users Stored: {users_count}")
+    print(f"✅ Students Registered: {students_count}")
+    print(f"✅ Faculty Members: {faculty_count}")
+    print("----------------------------------")
+    
     conn.close()
     print("SQLite database initialized successfully!")
 

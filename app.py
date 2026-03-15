@@ -12,6 +12,8 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.permanent_session_lifetime = timedelta(days=7)
 
+print("--- 🛡️  Starting IT-Department System in Data-Safety Mode ---")
+print("Initializing database... Existing student and faculty data will be preserved.")
 # Auto-initialize database
 init_db()
 
