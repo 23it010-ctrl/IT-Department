@@ -176,15 +176,40 @@ window.addEventListener('resize', updateLiveTime);
 setInterval(updateLiveTime, 1000);
 updateLiveTime();
 
-// Smooth scrolling for anchor links
+// Smooth scrolling for anchor links 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        // Target calculation is now handled natively via CSS scroll-padding-top
-        // Close mobile menu if open
-        const menu = document.getElementById('navbarNav');
-        if (menu.classList.contains('show')) {
-            const bCollapse = bootstrap.Collapse.getInstance(menu);
-            if (bCollapse) bCollapse.hide();
+        const targetId = this.getAttribute('href');
+        if (targetId === "#") return;
+        
+        const target = document.querySelector(targetId);
+        if (target) {
+            e.preventDefault(); // Prevent native jump to stop "jumping back" bugs
+            
+            // Close mobile menu if open
+            const menu = document.getElementById('navbarNav');
+            const isOpen = menu.classList.contains('show');
+            
+            if (isOpen) {
+                const bCollapse = bootstrap.Collapse.getOrCreateInstance(menu);
+                bCollapse.hide();
+            }
+            
+            // Wait for menu transition or scroll immediately if not mobile
+            const delay = isOpen ? 350 : 0; 
+            setTimeout(() => {
+                const offset = 90; // matches scroll-margin-top
+                const elementPosition = target.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // Update URL without jump
+                history.pushState(null, null, targetId);
+            }, delay);
         }
     });
 });
