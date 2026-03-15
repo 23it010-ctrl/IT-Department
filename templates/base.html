@@ -33,24 +33,24 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'students' %}active{% endif %}" href="{{ url_for('students') }}">Students</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#labs">Labs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'faculty_list' %}active{% endif %}" href="{{ url_for('faculty_list') }}">Faculty</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#news">News</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'labs' %}active{% endif %}" href="{{ url_for('labs') }}">Labs</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#faculty">Faculty</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'events' %}active{% endif %}" href="{{ url_for('events') }}">Events</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#events">Events</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'news' %}active{% endif %}" href="{{ url_for('news') }}">News</a>
+                        <a class="nav-link" href="{{ url_for('home') }}#students">Students</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'achievements_page' %}active{% endif %}" href="{{ url_for('achievements_page') }}">Achievements</a>

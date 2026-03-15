@@ -70,16 +70,32 @@ def inject_globals():
 def home():
     conn = get_db_connection()
     content_row = conn.execute("SELECT * FROM site_content WHERE page = 'home'").fetchone()
+    news = conn.execute("SELECT * FROM news ORDER BY date DESC LIMIT 3").fetchall()
+    events = conn.execute("SELECT * FROM events ORDER BY date DESC LIMIT 3").fetchall()
+    faculty = conn.execute("SELECT * FROM faculty LIMIT 4").fetchall()
+    students = conn.execute("SELECT * FROM students WHERE is_approved = 1 LIMIT 4").fetchall()
+    
+    # labs data
+    c_labs = conn.execute("SELECT description FROM site_content WHERE page='labs'").fetchone()
+    labs_data = {"title": "Our Laboratories", "details": []}
+    if c_labs:
+        try: labs_data = json.loads(c_labs['description'])
+        except: pass
+    
     conn.close()
     
-    if content_row:
-        content = dict(content_row)
-    else:
-        content = {
-            "title": "Welcome to the Department",
-            "description": "Excellence in technological education and innovation."
-        }
-    return render_template('home.html', content=content)
+    content = dict(content_row) if content_row else {
+        "title": "Welcome to the Department",
+        "description": "Excellence in technological education and innovation."
+    }
+    
+    return render_template('home.html', 
+                           content=content, 
+                           news=news, 
+                           events=events, 
+                           faculty=faculty, 
+                           students=students,
+                           labs=labs_data)
 
 @app.route('/students')
 def students():

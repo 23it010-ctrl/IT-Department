@@ -1,71 +1,156 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row g-0">
-    <div class="col-md-12 hero-section text-white p-5 text-center" style="border-radius: 20px; background: linear-gradient(135deg, #2c3e50, #3498db);">
+<!-- Hero Section -->
+<section id="home" class="row g-0">
+    <div class="col-md-12 hero-section text-white p-5 text-center animate-fade" style="border-radius: 30px; background: linear-gradient(135deg, #1e293b, #3b82f6);">
         <div class="mb-4">
             <span class="badge bg-white text-dark bg-opacity-75 py-2 px-4 rounded-pill shadow-sm" style="font-size: 0.95rem;">
                 <i class="fa-regular fa-clock me-2 text-primary"></i> <span id="liveDateTime" class="fw-bold"></span>
             </span>
         </div>
-        <h1 class="display-4 fw-bold mb-4">{{ content.title }}</h1>
-        <p class="lead mb-4">{{ content.description }}</p>
-        <div class="mb-4">
-            <a href="{{ url_for('students') }}" class="btn btn-primary btn-lg px-4 me-md-3 mb-3 mb-md-0 rounded-pill">Meet Our Students</a>
-            <a href="{{ url_for('faculty_list') }}" class="btn btn-outline-light btn-lg px-4 rounded-pill">Our Faculty</a>
+        <h1 class="display-3 fw-bold mb-4 animate-slide">{{ content.title }}</h1>
+        <p class="lead mb-5 px-md-5 mx-md-5">{{ content.description }}</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+            <a href="#students" class="btn btn-primary btn-lg px-5 rounded-pill shadow">Explore Student portal</a>
+            <a href="#faculty" class="btn btn-outline-light btn-lg px-5 rounded-pill">Meet Our Faculty</a>
         </div>
         
-        <div class="d-flex justify-content-center gap-4 mt-5">
-            {% if social_instagram %}
-            <a href="{{ social_instagram }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Instagram">
-                <i class="fa-brands fa-instagram fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#E1306C'; this.style.filter='drop-shadow(0 0 8px rgba(225,48,108,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
-            </a>
-            {% endif %}
-            {% if social_twitter %}
-            <a href="{{ social_twitter }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Twitter">
-                <i class="fa-brands fa-twitter fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#1DA1F2'; this.style.filter='drop-shadow(0 0 8px rgba(29,161,242,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
-            </a>
-            {% endif %}
-            {% if social_facebook %}
-            <a href="{{ social_facebook }}" target="_blank" class="text-white text-opacity-75 hover-opacity-100" aria-label="Facebook">
-                <i class="fa-brands fa-facebook fa-2x" style="transition: transform 0.2s ease, filter 0.2s ease;" onmouseover="this.style.transform='translateY(-5px) scale(1.1)'; this.style.color='#1877F2'; this.style.filter='drop-shadow(0 0 8px rgba(24,119,242,0.6))';" onmouseout="this.style.transform='none'; this.style.color='inherit'; this.style.filter='none';"></i>
-            </a>
-            {% endif %}
+        <div class="d-flex justify-content-center gap-4 mt-4">
+            {% if social_instagram %}<a href="{{ social_instagram }}" target="_blank" class="text-white opacity-75 hover-opacity-100"><i class="fa-brands fa-instagram fa-2x"></i></a>{% endif %}
+            {% if social_twitter %}<a href="{{ social_twitter }}" target="_blank" class="text-white opacity-75 hover-opacity-100"><i class="fa-brands fa-twitter fa-2x"></i></a>{% endif %}
+            {% if social_facebook %}<a href="{{ social_facebook }}" target="_blank" class="text-white opacity-75 hover-opacity-100"><i class="fa-brands fa-facebook fa-2x"></i></a>{% endif %}
         </div>
     </div>
-</div>
+</section>
 
-<div class="row mt-5 text-center">
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 p-4 shadow-sm border-0">
-            <div class="card-body">
-                <i class="fa-solid fa-laptop-code fa-3x mb-3 text-primary"></i>
-                <h3 class="card-title h5 fw-bold">Modern Labs</h3>
-                <p class="card-text text-muted">Experience hands-on learning in our state-of-the-art laboratories equipped with the latest software and hardware.</p>
-                <a href="{{ url_for('labs') }}" class="btn btn-outline-primary rounded-pill btn-sm mt-2">View Labs</a>
+<!-- About & Labs Section -->
+<section id="labs" class="mt-5 pt-5 animate-fade">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold"><i class="fa-solid fa-flask text-primary me-3"></i>{{ labs.title or "Our Laboratories" }}</h2>
+        <div class="bg-primary mx-auto" style="height: 4px; width: 60px; border-radius: 2px;"></div>
+    </div>
+    <div class="row g-4">
+        {% for lab in labs.details %}
+        <div class="col-md-6">
+            <div class="card h-100 p-4 border-0 shadow-sm glass-card">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                        <i class="fa-solid fa-microscope text-primary fa-xl"></i>
+                    </div>
+                    <h4 class="fw-bold mb-0 text-white">{{ lab.name }}</h4>
+                </div>
+                <p class="text-muted mb-0"><i class="fa-solid fa-gear me-2"></i><strong>Software:</strong> {{ lab.software }}</p>
             </div>
         </div>
+        {% endfor %}
     </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 p-4 shadow-sm border-0">
-            <div class="card-body">
-                <i class="fa-solid fa-calendar-alt fa-3x mb-3 text-success"></i>
-                <h3 class="card-title h5 fw-bold">Exciting Events</h3>
-                <p class="card-text text-muted">Join various departmental events, hackathons, and workshops to enhance your skills and network.</p>
-                <a href="{{ url_for('events') }}" class="btn btn-outline-success rounded-pill btn-sm mt-2">View Events</a>
+</section>
+
+<!-- News & Updates Section -->
+<section id="news" class="mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0"><i class="fa-solid fa-newspaper text-danger me-3"></i>Latest News</h2>
+        <a href="{{ url_for('news') }}" class="btn btn-outline-danger btn-sm rounded-pill">View All</a>
+    </div>
+    <div class="row g-4">
+        {% for item in news %}
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden animate-fade">
+                <div class="card-body p-4">
+                    <span class="badge bg-danger bg-opacity-10 text-danger mb-3 px-3 py-1 rounded-pill">{{ item.date }}</span>
+                    <h5 class="fw-bold mb-3 text-white">{{ item.title }}</h5>
+                    <p class="text-muted small mb-4 line-clamp-3">{{ item.content }}</p>
+                    <div class="mt-auto pt-3 border-top border-secondary border-opacity-25">
+                        <small class="text-muted"><i class="fa-solid fa-user-edit me-2"></i>{{ item.uploaded_by }}</small>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 p-4 shadow-sm border-0">
-            <div class="card-body">
-                <i class="fa-solid fa-newspaper fa-3x mb-3 text-danger"></i>
-                <h3 class="card-title h5 fw-bold">Latest News</h3>
-                <p class="card-text text-muted">Stay updated with the latest happenings, achievements, and announcements from our vibrant department.</p>
-                <a href="{{ url_for('news') }}" class="btn btn-outline-danger rounded-pill btn-sm mt-2">Read News</a>
+</section>
+
+<!-- Faculty Section -->
+<section id="faculty" class="mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0"><i class="fa-solid fa-chalkboard-user text-primary me-3"></i>Distinguished Faculty</h2>
+        <a href="{{ url_for('faculty_list') }}" class="btn btn-outline-primary btn-sm rounded-pill">View Directory</a>
+    </div>
+    <div class="row g-4">
+        {% for f in faculty %}
+        <div class="col-6 col-md-3">
+            <div class="card h-100 border-0 shadow-sm text-center p-3 animate-fade">
+                <div class="mx-auto mb-3" style="width: 80px; height: 80px;">
+                    {% if f.profile_photo %}
+                    <img src="{{ url_for('uploaded_file', filename=f.profile_photo) }}" class="img-fluid rounded-circle shadow-sm h-100 w-100" style="object-fit: cover;">
+                    {% else %}
+                    <div class="w-100 h-100 rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center">
+                        <i class="fa-solid fa-user-tie fa-2x text-primary"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <h6 class="fw-bold mb-1 text-white">{{ f.name }}</h6>
+                <p class="small text-muted mb-0">{{ f.department }}</p>
             </div>
         </div>
+        {% endfor %}
     </div>
-</div>
+</section>
+
+<!-- Events Section -->
+<section id="events" class="mt-5 pt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0"><i class="fa-solid fa-calendar-check text-success me-3"></i>Upcoming Events</h2>
+        <a href="{{ url_for('events') }}" class="btn btn-outline-success btn-sm rounded-pill">See More</a>
+    </div>
+    <div class="row g-4">
+        {% for event in events %}
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden animate-fade">
+                <div class="row g-0 h-100">
+                    {% if event.image_url %}
+                    <div class="col-4">
+                        <img src="{{ url_for('uploaded_file', filename=event.image_url) }}" class="h-100 w-100" style="object-fit: cover;" alt="Event">
+                    </div>
+                    {% endif %}
+                    <div class="col">
+                        <div class="card-body p-4 d-flex flex-column h-100">
+                            <span class="badge bg-success rounded-pill mb-2 align-self-start">{{ event.date }}</span>
+                            <h5 class="fw-bold mb-2 text-white">{{ event.title }}</h5>
+                            <p class="small text-muted mb-0 line-clamp-2">{{ event.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Students Section -->
+<section id="students" class="mt-5 pt-5 mb-5 pb-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold"><i class="fa-solid fa-graduation-cap text-warning me-3"></i>Our Students</h2>
+        <div class="bg-warning mx-auto" style="height: 4px; width: 60px; border-radius: 2px;"></div>
+    </div>
+    <div class="row g-4">
+        {% for s in students %}
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm p-4 text-center animate-fade">
+                <div class="mx-auto bg-dark p-3 rounded-circle mb-3" style="width: 70px; height: 70px;">
+                    <i class="fa-solid fa-user-graduate fa-2x text-warning"></i>
+                </div>
+                <h6 class="fw-bold mb-1 text-white">{{ s.name }}</h6>
+                <p class="badge bg-warning text-dark rounded-pill mb-2">{{ s.year }} Year</p>
+                <p class="small text-muted mb-0">{{ s.roll_number }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-md-12 text-center mt-5">
+            <a href="{{ url_for('students') }}" class="btn btn-warning px-5 rounded-pill fw-bold shadow">View All Students</a>
+        </div>
+    </div>
+</section>
 
 <script>
 function updateLiveTime() {
@@ -78,5 +163,25 @@ function updateLiveTime() {
 }
 setInterval(updateLiveTime, 1000);
 updateLiveTime();
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
 </script>
+
+<style>
+.hero-section { border-radius: 30px !important; transition: transform 0.3s ease; }
+.hero-section:hover { transform: scale(1.01); }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 2; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 3; }
+.glass-card { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+section { scroll-margin-top: 100px; }
+</style>
 {% endblock %}
