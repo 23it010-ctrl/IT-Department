@@ -43,6 +43,7 @@ def init_db():
             department TEXT,
             email TEXT,
             phone TEXT,
+            profile_photo TEXT,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
     ''')
@@ -94,7 +95,8 @@ def init_db():
             description TEXT,
             type TEXT,
             proof_url TEXT,
-            date TEXT
+            date TEXT,
+            is_approved INTEGER DEFAULT 0
         )
     ''')
 
