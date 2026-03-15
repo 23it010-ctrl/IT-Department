@@ -4,7 +4,7 @@
 <section id="home" class="row g-0">
     <div class="col-md-12 hero-section text-white p-5 text-center animate-fade" style="border-radius: 30px; background: linear-gradient(135deg, #1e293b, #3b82f6);">
         <div class="mb-4">
-            <span class="badge bg-white text-dark bg-opacity-75 py-2 px-4 rounded-pill shadow-sm" style="font-size: 0.95rem;">
+            <span class="badge bg-white text-dark bg-opacity-75 py-2 px-4 rounded-pill shadow-sm responsive-time-badge">
                 <i class="fa-regular fa-clock me-2 text-primary"></i> <span id="liveDateTime" class="fw-bold"></span>
             </span>
         </div>
@@ -155,12 +155,24 @@
 <script>
 function updateLiveTime() {
     const now = new Date();
-    const options = { 
-        weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit', second: '2-digit' 
-    };
+    const isMobile = window.innerWidth < 576;
+    
+    let options;
+    if (isMobile) {
+        options = { 
+            month: 'short', day: 'numeric', 
+            hour: '2-digit', minute: '2-digit'
+        };
+    } else {
+        options = { 
+            weekday: 'long', year: 'numeric', month: 'short', day: 'numeric', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit' 
+        };
+    }
+    
     document.getElementById('liveDateTime').textContent = now.toLocaleDateString('en-US', options);
 }
+window.addEventListener('resize', updateLiveTime);
 setInterval(updateLiveTime, 1000);
 updateLiveTime();
 
@@ -183,5 +195,18 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 3; }
 .glass-card { background: rgba(255,255,255,0.03) !important; border: 1px solid rgba(255,255,255,0.1) !important; }
 section { scroll-margin-top: 100px; }
+
+.responsive-time-badge {
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .responsive-time-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem !important;
+    }
+}
 </style>
 {% endblock %}
